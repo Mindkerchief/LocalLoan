@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/map"
+        android:icon="@android:drawable/ic_dialog_map"
+        android:title="Map" />
+    <item
+        android:id="@+id/Compute"
+        android:icon="@android:drawable/ic_dialog_dialer"
+        android:title="Compute" />
+    <item
+        android:id="@+id/locate"
+        android:icon="@android:drawable/ic_menu_mylocation"
+        android:title="Locate" />
+    <item
+        android:id="@+id/tracker"
+        android:icon="@android:drawable/ic_menu_edit"
+        android:title="Tracker" />
+    <item
+        android:id="@+id/setting"
+        android:icon="@android:drawable/ic_menu_preferences"
+        android:title="Setting" />
+</menu>
