@@ -1,53 +1,63 @@
 package com.lspuspcc.localloan;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 import android.os.Bundle;
+import android.view.MenuItem;
 
+import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.navigation.NavigationBarView;
 import com.lspuspcc.localloan.databinding.ActivityMainBinding;
 
 public class MainActivity extends AppCompatActivity {
 
-    ActivityMainBinding binding;
+    private BottomNavigationView bottomNavigation;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(R.layout.activity_main);
         replaceFragment(new MapFragment());
 
-        binding.bottomNavigationMenu.setOnItemSelectedListener(item -> {
-            int menuItemId = item.getItemId();
+        bottomNavigation = findViewById(R.id.bottomNavigationMenu);
+        bottomNavigation.setOnItemSelectedListener(
+            new NavigationBarView.OnItemSelectedListener() {
+                @Override
+                public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                    int menuItemId = item.getItemId();
 
-            if (menuItemId == R.id.map) {
-                replaceFragment(new MapFragment());
-                return true;
+                    if (menuItemId == R.id.map) {
+                        replaceFragment(new MapFragment());
+                        return true;
+                    }
+                    else if (menuItemId == R.id.compute) {
+                        replaceFragment(new ComputeFragment());
+                        return true;
+                    }
+                    else if (menuItemId == R.id.tracker) {
+                        replaceFragment(new TrackerFragment());
+                        return true;
+                    }
+                    else if (menuItemId == R.id.setting) {
+                        replaceFragment(new SettingFragment());
+                        return true;
+                    }
+                    return false;
+                }
             }
-            else if (menuItemId == R.id.compute) {
-                replaceFragment(new ComputeFragment());
-                return true;
-            }
-            else if (menuItemId == R.id.tracker) {
-                replaceFragment(new TrackerFragment());
-                return true;
-            }
-            else if (menuItemId == R.id.setting) {
-                replaceFragment(new SettingFragment());
-                return true;
-            }
+        );
 
-            return true;
-        });
     }
 
     private void replaceFragment(Fragment fragment) {
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.replace(R.id.mainFrame, fragment);
+        fragmentTransaction.addToBackStack(null);
         fragmentTransaction.commit();
     }
 }

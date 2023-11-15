@@ -19,8 +19,15 @@
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottomNavigationMenu"
+        style="@style/Base.Theme.LocalLoan"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:hapticFeedbackEnabled="false"
+        android:longClickable="false"
+        android:soundEffectsEnabled="false"
+        app:itemActiveIndicatorStyle="@style/Base.Theme.LocalLoan"
+        app:itemIconSize="30dp"
+        app:labelVisibilityMode="labeled"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
