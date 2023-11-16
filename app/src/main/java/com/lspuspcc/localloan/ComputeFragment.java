@@ -7,6 +7,10 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
+
+import com.google.android.material.textfield.TextInputEditText;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -60,5 +64,17 @@ public class ComputeFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_compute, container, false);
+    }
+
+    public void Calculation(View view) {
+        double loanAmount = Double.parseDouble(view.findViewById(R.id.inputLoanAmount).toString());
+        double interestRate = Double.parseDouble(view.findViewById(R.id.inputInterest).toString());
+        int term = (int) Double.parseDouble(view.findViewById(R.id.inputTerm).toString());
+
+        double monthlyInterestRate = interestRate / 100 / 12;
+
+        double monthlyPayment = (loanAmount * monthlyInterestRate) / (1 - Math.pow(1 + monthlyInterestRate, -term));
+
+        //textOutputMonthlyPayment.setText("Monthly Payment: " + monthlyPayment);
     }
 }
