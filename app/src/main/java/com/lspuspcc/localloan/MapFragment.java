@@ -1,12 +1,24 @@
 package com.lspuspcc.localloan;
 
+import com.lspuspcc.localloan.databinding.FragmentMapBinding;
+
+import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import android.content.ContextWrapper;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import org.osmdroid.api.IMapController;
+import org.osmdroid.tileprovider.tilesource.TileSourceFactory;
+import org.osmdroid.views.MapView;
+import org.osmdroid.views.overlay.mylocation.GpsMyLocationProvider;
+import org.osmdroid.views.overlay.mylocation.MyLocationNewOverlay;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -23,6 +35,8 @@ public class MapFragment extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
+
+    private FragmentMapBinding binding;
 
     public MapFragment() {
         // Required empty public constructor
@@ -49,10 +63,13 @@ public class MapFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        binding = FragmentMapBinding.inflate(getLayoutInflater());
         if (getArguments() != null) {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
+
+        binding.osmMap.setTileSource(TileSourceFactory.MAPNIK);
     }
 
     @Override
@@ -60,5 +77,27 @@ public class MapFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_map, container, false);
+    }
+
+    private void locateDevice() {
+        Context context = getContext().getApplicationContext();
+        GpsMyLocationProvider myLocationProvider = new GpsMyLocationProvider(context);
+        MyLocationNewOverlay myLocationOverlay = new MyLocationNewOverlay(myLocationProvider, binding.osmMap);
+        myLocationOverlay.enableMyLocation();
+        myLocationOverlay.enableFollowLocation();
+
+        Bitmap icon = BitmapFactory.decodeResource(getResources(), org.osmdroid.library.R.drawable.person);
+        myLocationOverlay.setPersonIcon(icon);
+        binding.osmMap.getOverlays().add(myLocationOverlay);
+        myLocationOverlay.runOnFirstFix(new Runnable() {
+            @Override
+            public void run() {
+                binding.osmMap.getOverlays().clear();
+                binding.osmMap.getOverlays().add(myLocationOverlay);
+
+                IMapController mapController = binding.osmMap.getController();;
+                mapController.animateTo(myLocationOverlay.getMyLocation());
+            }
+        });
     }
 }
