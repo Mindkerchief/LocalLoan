@@ -1,22 +1,24 @@
 package com.lspuspcc.localloan;
 
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.lspuspcc.localloan.databinding.FragmentMapBinding;
 
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.os.Bundle;
-
-import androidx.fragment.app.Fragment;
-import android.content.ContextWrapper;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
+
+import androidx.fragment.app.Fragment;
 
 import org.osmdroid.api.IMapController;
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory;
-import org.osmdroid.views.MapView;
+import org.osmdroid.util.GeoPoint;
+import org.osmdroid.views.MapController;
 import org.osmdroid.views.overlay.mylocation.GpsMyLocationProvider;
 import org.osmdroid.views.overlay.mylocation.MyLocationNewOverlay;
 
@@ -37,6 +39,7 @@ public class MapFragment extends Fragment {
     private String mParam2;
 
     private FragmentMapBinding binding;
+    private GeoPoint targetPoint = new GeoPoint(14.070013, 121.325701);
 
     public MapFragment() {
         // Required empty public constructor
@@ -68,8 +71,13 @@ public class MapFragment extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
-
         binding.osmMap.setTileSource(TileSourceFactory.MAPNIK);
+        binding.osmMap.setBuiltInZoomControls(true);
+        binding.osmMap.setMultiTouchControls(true);
+
+        IMapController mapController = binding.osmMap.getController();
+        mapController.setZoom(9.5);
+        mapController.setCenter(targetPoint);
     }
 
     @Override
@@ -79,8 +87,18 @@ public class MapFragment extends Fragment {
         return inflater.inflate(R.layout.fragment_map, container, false);
     }
 
+    public void onResume() {
+        super.onResume();
+        binding.osmMap.onResume();
+    }
+
+    public void onPause() {
+        super.onPause();
+        binding.osmMap.onPause();
+    }
+
     private void locateDevice() {
-        Context context = getContext().getApplicationContext();
+        Context context = this.getContext();
         GpsMyLocationProvider myLocationProvider = new GpsMyLocationProvider(context);
         MyLocationNewOverlay myLocationOverlay = new MyLocationNewOverlay(myLocationProvider, binding.osmMap);
         myLocationOverlay.enableMyLocation();
@@ -95,9 +113,19 @@ public class MapFragment extends Fragment {
                 binding.osmMap.getOverlays().clear();
                 binding.osmMap.getOverlays().add(myLocationOverlay);
 
-                IMapController mapController = binding.osmMap.getController();;
+                IMapController mapController = binding.osmMap.getController();
                 mapController.animateTo(myLocationOverlay.getMyLocation());
             }
         });
+    }
+
+    public void zoomIn(FloatingActionButton v) {
+        MapController mapController = (MapController) binding.osmMap.getController();
+        binding.osmMap.setExpectedCenter(targetPoint);
+        mapController.setCenter(targetPoint);
+        mapController.setZoom(14);
+        v.setBackgroundColor(Color.GREEN);
+
+        Toast.makeText(this.getContext(), "Zoom In", Toast.LENGTH_SHORT).show();
     }
 }
