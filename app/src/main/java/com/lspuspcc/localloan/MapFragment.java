@@ -19,6 +19,7 @@ import org.osmdroid.api.IMapController;
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory;
 import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.MapController;
+import org.osmdroid.views.MapView;
 import org.osmdroid.views.overlay.mylocation.GpsMyLocationProvider;
 import org.osmdroid.views.overlay.mylocation.MyLocationNewOverlay;
 
@@ -39,6 +40,7 @@ public class MapFragment extends Fragment {
     private String mParam2;
 
     private FragmentMapBinding binding;
+    private MapView mapView = null;
     private GeoPoint targetPoint = new GeoPoint(14.070013, 121.325701);
 
     public MapFragment() {
@@ -84,7 +86,9 @@ public class MapFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_map, container, false);
+        mapView = new MapView(inflater.getContext());
+        return mapView;
+        //return inflater.inflate(R.layout.fragment_map, container, false);
     }
 
     public void onResume() {
