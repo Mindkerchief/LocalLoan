@@ -12,105 +12,31 @@
 
     <!-- TODO: Update blank fragment layout -->
 
-    <TextView
-        android:id="@+id/textOutputMonthlyPayment"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="272dp"
-        android:text="@string/hello_blank_fragment"
-        android:textSize="20sp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:text="Monthly Payment: " />
-
-    <TextView
-        android:id="@+id/textLoanAmount"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="35dp"
-        android:text="@string/loan_amount"
-        android:textSize="20sp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:text="Loan Amount" />
-
-    <com.google.android.material.textfield.TextInputEditText
-        android:id="@+id/inputTerm"
-        android:layout_width="200dp"
-        android:layout_height="48dp"
-        android:layout_marginStart="200dp"
-        android:layout_marginTop="132dp"
-        android:hint="Months"
-        app:layout_constraintStart_toStartOf="parent"
+    <Button
+        android:id="@+id/buttonSavings"
+        android:layout_width="0dp"
+        android:layout_height="80dp"
+        android:layout_weight="1"
+        android:text="SAVINGS"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/buttonLoan"
         app:layout_constraintTop_toTopOf="parent" />
-
-    <TextView
-        android:id="@+id/textTerm"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="139dp"
-        android:text="@string/term"
-        android:textSize="20sp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:text="Term" />
-
-    <TextView
-        android:id="@+id/textOutput"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="240dp"
-        android:text="@string/hello_blank_fragment"
-        android:textSize="20sp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:text="Output" />
-
-    <com.google.android.material.textfield.TextInputEditText
-        android:id="@+id/inputLoanAmount"
-        android:layout_width="200dp"
-        android:layout_height="48dp"
-        android:layout_marginStart="200dp"
-        android:layout_marginTop="26dp"
-        android:hint="Php"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <com.google.android.material.textfield.TextInputEditText
-        android:id="@+id/inputInterest"
-        android:layout_width="200dp"
-        android:layout_height="48dp"
-        android:layout_marginStart="200dp"
-        android:layout_marginTop="79dp"
-        android:hint="Percentage"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <TextView
-        android:id="@+id/textInterest"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="87dp"
-        android:text="@string/interest"
-        android:textSize="20sp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:text="Interest" />
 
     <Button
-        android:id="@+id/buttonCalculate"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="292dp"
-        android:layout_marginTop="187dp"
-        android:onClick="onButtonCalculateClick"
-        android:text="Calculate"
+        android:id="@+id/buttonLoan"
+        android:layout_width="0dp"
+        android:layout_height="80dp"
+        android:layout_weight="1"
+        android:text="LOAN"
+        app:layout_constraintEnd_toStartOf="@+id/buttonSavings"
         app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <FrameLayout
+        android:id="@+id/fragment_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="80dp"
         app:layout_constraintTop_toTopOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

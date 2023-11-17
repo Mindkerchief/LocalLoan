@@ -5,4 +5,6 @@
     <string name="loan_amount">Loan Amount</string>
     <string name="interest">Interest</string>
     <string name="term">Term</string>
+    <string name="loan">Loan</string>
+    <string name="savings">Savings</string>
 </resources>
