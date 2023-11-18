@@ -35,51 +35,39 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         mapFragment = new MapFragment();
         replaceFragment(mapFragment);
-        //addFragment(new MapControls());
 
         bottomNavigation = findViewById(R.id.bottomNavigationMenu);
         bottomNavigation.setOnItemSelectedListener(
             new NavigationBarView.OnItemSelectedListener() {
                 @Override
                 public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                    int menuItemId = item.getItemId();
-
-                    if (menuItemId == R.id.map) {
-                        replaceFragment(mapFragment);
-                        //addFragment(new MapControls());
-                        return true;
-                    }
-                    else if (menuItemId == R.id.compute) {
-                        replaceFragment(new ComputeFragment());
-                        return true;
-                    }
-                    else if (menuItemId == R.id.tracker) {
-                        replaceFragment(new TrackerFragment());
-                        return true;
-                    }
-                    else if (menuItemId == R.id.setting) {
-                        replaceFragment(new SettingFragment());
-                        return true;
-                    }
-                    return false;
+                    return bottomNavigationBtnOnClick(item);
                 }
             }
         );
+        isPermissionsGranted();
+    }
 
-        String[] permissions = new String[] {
-                Manifest.permission.READ_EXTERNAL_STORAGE,
-                Manifest.permission.WRITE_EXTERNAL_STORAGE,
-                Manifest.permission.INTERNET,
-                Manifest.permission.ACCESS_NETWORK_STATE,
-                Manifest.permission.ACCESS_WIFI_STATE,
-                Manifest.permission.ACCESS_COARSE_LOCATION,
-                Manifest.permission.ACCESS_FINE_LOCATION
-        };
+    private boolean bottomNavigationBtnOnClick(MenuItem item) {
+        int menuItemId = item.getItemId();
 
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_NETWORK_STATE)
-            != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(this, permissions, MY_PERMISSION_REQUEST);
+        if (menuItemId == R.id.map) {
+            replaceFragment(mapFragment);
+            return true;
         }
+        else if (menuItemId == R.id.compute) {
+            replaceFragment(new ComputeFragment());
+            return true;
+        }
+        else if (menuItemId == R.id.tracker) {
+            replaceFragment(new TrackerFragment());
+            return true;
+        }
+        else if (menuItemId == R.id.setting) {
+            replaceFragment(new SettingFragment());
+            return true;
+        }
+        return false;
     }
 
     private void replaceFragment(Fragment fragment) {
@@ -95,6 +83,32 @@ public class MainActivity extends AppCompatActivity {
                 .addToBackStack(null)
                 .commit();
 
+    }
+
+    private boolean isPermissionsGranted() {
+        String[] permissions = new String[] {
+                Manifest.permission.READ_EXTERNAL_STORAGE,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                Manifest.permission.INTERNET,
+                Manifest.permission.ACCESS_NETWORK_STATE,
+                Manifest.permission.ACCESS_WIFI_STATE,
+                Manifest.permission.ACCESS_COARSE_LOCATION,
+                Manifest.permission.ACCESS_FINE_LOCATION
+        };
+
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION)
+            != PackageManager.PERMISSION_GRANTED
+            && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
+            != PackageManager.PERMISSION_GRANTED
+            && ActivityCompat.checkSelfPermission(this, Manifest.permission.INTERNET)
+            != PackageManager.PERMISSION_GRANTED
+            && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_NETWORK_STATE)
+            != PackageManager.PERMISSION_GRANTED)
+        {
+            ActivityCompat.requestPermissions(this, permissions, MY_PERMISSION_REQUEST);
+            return false;
+        }
+        else return true;
     }
 
     public void onRequestPermissionResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
