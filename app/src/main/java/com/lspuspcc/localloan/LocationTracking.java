@@ -8,6 +8,7 @@ import android.location.LocationManager;
 import android.os.Bundle;
 
 import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
 public class LocationTracking {
     private Context context;
@@ -15,7 +16,7 @@ public class LocationTracking {
     private LocationManager locationManager;
     private LocationListener gpsLocationListener;
     private LocationListener networkLocationListener;
-    private static final int MY_PERMISSION_REQUEST = 2;
+    private static final byte LOCATION_PERMISSIONS = 04;
 
     public double longitude;
     public double latitude;
@@ -27,7 +28,6 @@ public class LocationTracking {
         gpsLocationListener = new LocationListener() {
             @Override
             public void onLocationChanged(Location location) {
-                // Handle GPS location changes
                 currentLocation = location;
             }
 
@@ -47,7 +47,6 @@ public class LocationTracking {
         networkLocationListener = new LocationListener() {
             @Override
             public void onLocationChanged(Location location) {
-                // Handle network location changes
                 currentLocation = location;
             }
 
@@ -65,32 +64,26 @@ public class LocationTracking {
         };
     }
 
-    // Method for requesting location updates
     public void requestLocationUpdates() {
         boolean hasGps = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
         boolean hasNetwork = locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
 
         if (hasGps) {
-            if (ActivityCompat.checkSelfPermission(context, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(context, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                ActivityCompat.requestPermissions((MainActivity) context,
-                        new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION, android.Manifest.permission.ACCESS_COARSE_LOCATION},
-                        MY_PERMISSION_REQUEST);
-                return;
-            }
+            checkPermission();
             locationManager.requestLocationUpdates(
-                    LocationManager.GPS_PROVIDER,
-                    5000,
-                    0F,
-                    gpsLocationListener
+                LocationManager.GPS_PROVIDER,
+                5000,
+                0F,
+                gpsLocationListener
             );
         }
 
         if (hasNetwork) {
             locationManager.requestLocationUpdates(
-                    LocationManager.NETWORK_PROVIDER,
-                    5000,
-                    0F,
-                    networkLocationListener
+                LocationManager.NETWORK_PROVIDER,
+                5000,
+                0F,
+                networkLocationListener
             );
         }
     }
@@ -101,25 +94,28 @@ public class LocationTracking {
     }
 
     public void getBestLocation() {
-        if (ActivityCompat.checkSelfPermission(context, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(context, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions((MainActivity) context,
-                    new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION, android.Manifest.permission.ACCESS_COARSE_LOCATION},
-                    MY_PERMISSION_REQUEST);
-            return;
-        }
+        checkPermission();
 
         Location locationByGps = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
         if (locationByGps != null) {
             currentLocation = locationByGps;
-            // Use latitude and longitude as needed
         }
 
         Location locationByNetwork = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
         if (locationByNetwork != null) {
             if (currentLocation == null || locationByNetwork.getAccuracy() < currentLocation.getAccuracy()) {
                 currentLocation = locationByNetwork;
-                // Use latitude and longitude as needed
             }
+        }
+    }
+
+    private void checkPermission() {
+        if (ContextCompat.checkSelfPermission(context, android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_DENIED
+            && ContextCompat.checkSelfPermission(context, android.Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_DENIED)
+        {
+            ActivityCompat.requestPermissions((MainActivity) context,
+                new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION, android.Manifest.permission.ACCESS_COARSE_LOCATION},
+                LOCATION_PERMISSIONS);
         }
     }
 }

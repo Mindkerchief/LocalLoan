@@ -1,15 +1,22 @@
 package com.lspuspcc.localloan;
 
+import android.Manifest;
+import android.app.AlertDialog;
 import android.content.Context;
-import android.graphics.Color;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.location.LocationManager;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.provider.Settings;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.Toast;
 
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -19,8 +26,6 @@ import org.osmdroid.config.Configuration;
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory;
 import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.MapView;
-import org.osmdroid.views.overlay.mylocation.GpsMyLocationProvider;
-import org.osmdroid.views.overlay.mylocation.MyLocationNewOverlay;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -40,8 +45,9 @@ public class MapFragment extends Fragment {
 
     private MapView mapView;
     private LocationTracking liveLocation;
-    private GeoPoint currentlocation;
-    private double currentZoom = 18.0;
+    private LocationManager locationManager;
+    private GeoPoint currentlocation = new GeoPoint(12.70000, 122.70000);;
+    private double currentZoom = 7.5;
 
     public MapFragment() {
         // Required empty public constructor
@@ -84,14 +90,16 @@ public class MapFragment extends Fragment {
         Context context = requireContext().getApplicationContext();
         Configuration.getInstance().load(context, PreferenceManager.getDefaultSharedPreferences(context));
 
-
         mapView.setTileSource(TileSourceFactory.MAPNIK);
         mapView.setBuiltInZoomControls(false);
         mapView.setMultiTouchControls(true);
 
+        locationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
+
         locateGpsBtnOnClick(context);
+        //showGpsSettingsDialog(context);
 
-
+        // FloatingActionButtons OnClickListeners
         FloatingActionButton locateGpsBtn = rootView.findViewById(R.id.locateGpsBtn);
         locateGpsBtn.setOnClickListener(view -> locateGpsBtnOnClick(context));
 
@@ -115,14 +123,33 @@ public class MapFragment extends Fragment {
     }
 
     public void locateGpsBtnOnClick(Context context) {
-        liveLocation = new LocationTracking(context);
-        liveLocation.requestLocationUpdates();
-        liveLocation.getBestLocation();
-        currentlocation = new GeoPoint(liveLocation.currentLocation.getLatitude(), liveLocation.currentLocation.getLongitude());
+        // Check for permissions
+        if (ContextCompat.checkSelfPermission(context, android.Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED
+            && ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED)
+        { // Check if GPS is enabled
+            if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+                try {
+                    liveLocation = new LocationTracking(context);
+                    liveLocation.requestLocationUpdates();
+                    liveLocation.getBestLocation();
+                    currentlocation = new GeoPoint(liveLocation.currentLocation.getLatitude(), liveLocation.currentLocation.getLongitude());
+                    currentZoom = 18.0;
+                } catch (Exception e) {
+                }
+            }
+        }
 
-        IMapController mapController = mapView.getController();
-        mapController.setZoom(currentZoom);
-        mapController.animateTo(currentlocation, currentZoom, 500L);
+        if (currentlocation != null) {
+            IMapController mapController = mapView.getController();
+            mapController.setZoom(currentZoom);
+            mapController.animateTo(currentlocation, currentZoom, 500L);
+            currentlocation = null;
+        }
+        else {
+            Toast.makeText(context, "Location is unavailable", Toast.LENGTH_SHORT).show();
+            Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+            startActivity(intent);
+        }
     }
 
     public void zoomInBtnOnClick() {
