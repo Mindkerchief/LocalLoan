@@ -1,26 +1,23 @@
 package com.lspuspcc.localloan;
 
-import com.lspuspcc.localloan.databinding.FragmentMapBinding;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
+
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import org.osmdroid.api.IMapController;
 import org.osmdroid.config.Configuration;
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory;
 import org.osmdroid.util.GeoPoint;
-import org.osmdroid.views.MapController;
 import org.osmdroid.views.MapView;
 import org.osmdroid.views.overlay.mylocation.GpsMyLocationProvider;
 import org.osmdroid.views.overlay.mylocation.MyLocationNewOverlay;
@@ -41,8 +38,8 @@ public class MapFragment extends Fragment {
     private String mParam1;
     private String mParam2;
 
-    private FragmentMapBinding binding;
     private MapView mapView;
+    private GeoPoint currentlocation = new GeoPoint(14.070013, 121.325701);
 
     public MapFragment() {
         // Required empty public constructor
@@ -73,7 +70,6 @@ public class MapFragment extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
-        binding = FragmentMapBinding.inflate(getLayoutInflater());
     }
 
     @Override
@@ -87,12 +83,21 @@ public class MapFragment extends Fragment {
         Configuration.getInstance().load(context, PreferenceManager.getDefaultSharedPreferences(context));
 
         mapView.setTileSource(TileSourceFactory.MAPNIK);
+        mapView.setBuiltInZoomControls(false);
         mapView.setMultiTouchControls(true);
 
-        GeoPoint targetPoint = new GeoPoint(14.070013, 121.325701);
         IMapController mapController = mapView.getController();
         mapController.setZoom(18.0);
-        mapController.setCenter(targetPoint);
+        mapController.setCenter(currentlocation);
+
+        FloatingActionButton locateGpsBtn = rootView.findViewById(R.id.locateGpsBtn);
+        locateGpsBtn.setOnClickListener(view -> locateGpsBtnOnClick());
+
+        FloatingActionButton zoomOutBtn = rootView.findViewById(R.id.zoomOutBtn);
+        zoomOutBtn.setOnClickListener(view -> zoomOutBtnOnClick());
+
+        FloatingActionButton zoomInBtn = rootView.findViewById(R.id.zoomInBtn);
+        zoomInBtn.setOnClickListener(view -> zoomInBtnOnClick());
 
         return rootView;
     }
@@ -107,15 +112,14 @@ public class MapFragment extends Fragment {
         mapView.onPause();
     }
 
-    private void locateDevice() {
-        Context context = this.getContext();
-        GpsMyLocationProvider myLocationProvider = new GpsMyLocationProvider(context);
+    public void locateGpsBtnOnClick() {
+        GpsMyLocationProvider myLocationProvider = new GpsMyLocationProvider(requireContext().getApplicationContext());
         MyLocationNewOverlay myLocationOverlay = new MyLocationNewOverlay(myLocationProvider, mapView);
         myLocationOverlay.enableMyLocation();
         myLocationOverlay.enableFollowLocation();
 
-        Bitmap icon = BitmapFactory.decodeResource(getResources(), org.osmdroid.library.R.drawable.person);
-        myLocationOverlay.setPersonIcon(icon);
+        //Bitmap icon = BitmapFactory.decodeResource(getResources(), org.osmdroid.library.R.drawable.person);
+        //myLocationOverlay.setPersonIcon(icon);
         mapView.getOverlays().add(myLocationOverlay);
         myLocationOverlay.runOnFirstFix(new Runnable() {
             @Override
@@ -129,15 +133,11 @@ public class MapFragment extends Fragment {
         });
     }
 
-    public void zoomIn(FloatingActionButton v) {
-        IMapController mapController = mapView.getController();
-        mapController.setZoom(mapView.getZoomLevel() + 1);
-        Toast.makeText(getContext(), "Zoom In", Toast.LENGTH_SHORT).show();
+    public void zoomInBtnOnClick() {
+        mapView.getController().zoomIn();
     }
 
-    public void zoomOut(FloatingActionButton v) {
-        IMapController mapController = mapView.getController();
-        mapController.setZoom(mapView.getZoomLevel() - 1);
-        Toast.makeText(getContext(), "Zoom Out", Toast.LENGTH_SHORT).show();
+    public void zoomOutBtnOnClick() {
+        mapView.getController().zoomOut();
     }
 }
