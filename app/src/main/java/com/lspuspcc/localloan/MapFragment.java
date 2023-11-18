@@ -39,7 +39,9 @@ public class MapFragment extends Fragment {
     private String mParam2;
 
     private MapView mapView;
-    private GeoPoint currentlocation = new GeoPoint(14.070013, 121.325701);
+    private LocationTracking liveLocation;
+    private GeoPoint currentlocation;
+    private double currentZoom = 18.0;
 
     public MapFragment() {
         // Required empty public constructor
@@ -82,16 +84,16 @@ public class MapFragment extends Fragment {
         Context context = requireContext().getApplicationContext();
         Configuration.getInstance().load(context, PreferenceManager.getDefaultSharedPreferences(context));
 
+
         mapView.setTileSource(TileSourceFactory.MAPNIK);
         mapView.setBuiltInZoomControls(false);
         mapView.setMultiTouchControls(true);
 
-        IMapController mapController = mapView.getController();
-        mapController.setZoom(18.0);
-        mapController.setCenter(currentlocation);
+        locateGpsBtnOnClick(context);
+
 
         FloatingActionButton locateGpsBtn = rootView.findViewById(R.id.locateGpsBtn);
-        locateGpsBtn.setOnClickListener(view -> locateGpsBtnOnClick());
+        locateGpsBtn.setOnClickListener(view -> locateGpsBtnOnClick(context));
 
         FloatingActionButton zoomOutBtn = rootView.findViewById(R.id.zoomOutBtn);
         zoomOutBtn.setOnClickListener(view -> zoomOutBtnOnClick());
@@ -112,32 +114,24 @@ public class MapFragment extends Fragment {
         mapView.onPause();
     }
 
-    public void locateGpsBtnOnClick() {
-        GpsMyLocationProvider myLocationProvider = new GpsMyLocationProvider(requireContext().getApplicationContext());
-        MyLocationNewOverlay myLocationOverlay = new MyLocationNewOverlay(myLocationProvider, mapView);
-        myLocationOverlay.enableMyLocation();
-        myLocationOverlay.enableFollowLocation();
+    public void locateGpsBtnOnClick(Context context) {
+        liveLocation = new LocationTracking(context);
+        liveLocation.requestLocationUpdates();
+        liveLocation.getBestLocation();
+        currentlocation = new GeoPoint(liveLocation.currentLocation.getLatitude(), liveLocation.currentLocation.getLongitude());
 
-        //Bitmap icon = BitmapFactory.decodeResource(getResources(), org.osmdroid.library.R.drawable.person);
-        //myLocationOverlay.setPersonIcon(icon);
-        mapView.getOverlays().add(myLocationOverlay);
-        myLocationOverlay.runOnFirstFix(new Runnable() {
-            @Override
-            public void run() {
-                mapView.getOverlays().clear();
-                mapView.getOverlays().add(myLocationOverlay);
-
-                IMapController mapController = mapView.getController();
-                mapController.animateTo(myLocationOverlay.getMyLocation());
-            }
-        });
+        IMapController mapController = mapView.getController();
+        mapController.setZoom(currentZoom);
+        mapController.animateTo(currentlocation, currentZoom, 500L);
     }
 
     public void zoomInBtnOnClick() {
         mapView.getController().zoomIn();
+        currentZoom = mapView.getZoomLevelDouble();
     }
 
     public void zoomOutBtnOnClick() {
         mapView.getController().zoomOut();
+        currentZoom = mapView.getZoomLevelDouble();
     }
 }
