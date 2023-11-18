@@ -1,14 +1,16 @@
 package com.lspuspcc.localloan;
 
+import android.content.Context;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
 
-import android.text.TextUtils;
-import android.util.Log;
+import android.text.InputType;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -68,12 +70,20 @@ public class ComputeLoanFragment extends Fragment {
         EditText editTextLoanAmount = view.findViewById(R.id.editTextLoanAmount);
         EditText editTextInterestRate = view.findViewById(R.id.editTextInterestRate);
         EditText editTextTerm = view.findViewById(R.id.editTextTerm);
-        Button btnComputeLoan = view.findViewById(R.id.btnComputeLoan);
-        TextView output = view.findViewById(R.id.textView);
+            editTextTerm.setInputType(InputType.TYPE_CLASS_NUMBER);
+        Button buttonComputeLoan = view.findViewById(R.id.btnComputeLoan);
+        TextView output = view.findViewById(R.id.textOutput);
 
-        btnComputeLoan.setOnClickListener(new View.OnClickListener() {
+        buttonComputeLoan.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                InputMethodManager inputMethodManager = (InputMethodManager) requireContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+                inputMethodManager.hideSoftInputFromWindow(v.getWindowToken(), 0);
+
+                editTextLoanAmount.clearFocus();
+                editTextInterestRate.clearFocus();
+                editTextTerm.clearFocus();
+
                 String loanAmountStr = editTextLoanAmount.getText().toString();
                 String interestRateStr = editTextInterestRate.getText().toString();
                 String termMonthsStr = editTextTerm.getText().toString();
@@ -84,13 +94,31 @@ public class ComputeLoanFragment extends Fragment {
 
                 double monthlyInterestRate = interestRate / 100 / 12;
                 double monthlyPayment = (loanAmount * monthlyInterestRate) / (1 - Math.pow(1 + monthlyInterestRate, -loanTermMonths));
+                double totalPayment = monthlyPayment * loanTermMonths;
 
                 // Display the result or take further actions as needed
-                String result = String.format("Loan Amount: Php " + loanAmount + "\nInterest Rate: " + interestRate + "%%\nTerm (Months): " + loanTermMonths + "\nMonthly Payment: Php " + monthlyPayment);
+                String result = String.format("Loan Amount: Php " + loanAmount +
+                        "\nInterest Rate: " + interestRate + "%%\nTerm (Months): " + loanTermMonths +
+                        "\nMonthly Payment: Php " + monthlyPayment + "\nTotal Payment: " + totalPayment);
                 output.setText(result);
             }
         });
 
-        return view;
+        View rootView = view.findViewById(R.id.frameLayout2); // Replace with the actual ID of your root layout
+        rootView.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                InputMethodManager inputMethodManager = (InputMethodManager) requireContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+                inputMethodManager.hideSoftInputFromWindow(v.getWindowToken(), 0);
+
+                editTextLoanAmount.clearFocus();
+                editTextInterestRate.clearFocus();
+                editTextTerm.clearFocus();
+
+                return false;
+            }
+        });
+
+    return view;
     }
 }
