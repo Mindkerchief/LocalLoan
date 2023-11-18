@@ -96,7 +96,6 @@ public class ComputeLoanFragment extends Fragment {
                 double monthlyPayment = (loanAmount * monthlyInterestRate) / (1 - Math.pow(1 + monthlyInterestRate, -loanTermMonths));
                 double totalPayment = monthlyPayment * loanTermMonths;
 
-                // Display the result or take further actions as needed
                 String result = String.format("Loan Amount: Php " + loanAmount +
                         "\nInterest Rate: " + interestRate + "%%\nTerm (Months): " + loanTermMonths +
                         "\nMonthly Payment: Php " + monthlyPayment + "\nTotal Payment: " + totalPayment);

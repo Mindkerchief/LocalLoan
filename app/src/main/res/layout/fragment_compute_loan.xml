@@ -7,8 +7,6 @@
     android:layout_height="match_parent"
     tools:context=".ComputeLoanFragment">
 
-    <!-- TODO: Update blank fragment layout -->
-
     <TextView
         android:id="@+id/textLabelLoanAmount"
         android:layout_width="wrap_content"
@@ -82,7 +80,7 @@
         android:layout_marginStart="16dp"
         android:layout_marginEnd="16dp"
         android:hint=" "
-        android:inputType="number"
+        android:inputType="numberDecimal"
         android:minHeight="48dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.523"
@@ -94,7 +92,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
-        android:text="@string/term"
+        android:text="@string/term_months"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/editTextInterestRate" />
 
