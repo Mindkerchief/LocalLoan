@@ -62,19 +62,37 @@ public class ComputeFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_compute, container, false);
-    }
 
-    public void Calculation(View view) {
-        double loanAmount = Double.parseDouble(view.findViewById(R.id.inputLoanAmount).toString());
-        double interestRate = Double.parseDouble(view.findViewById(R.id.inputInterest).toString());
-        int term = (int) Double.parseDouble(view.findViewById(R.id.inputTerm).toString());
+        View view = inflater.inflate(R.layout.fragment_compute, container, false);
 
-        double monthlyInterestRate = interestRate / 100 / 12;
+        if (savedInstanceState == null) {
+            // Set the default fragment (LoanFragment) when the fragment is created
+            getChildFragmentManager().beginTransaction()
+                    .replace(R.id.fragment_container, new ComputeLoanFragment())
+                    .commit();
+        }
 
-        double monthlyPayment = (loanAmount * monthlyInterestRate) / (1 - Math.pow(1 + monthlyInterestRate, -term));
+        // Set up navigation buttons
+        view.findViewById(R.id.buttonLoan).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Replace the current fragment with LoanFragment
+                getChildFragmentManager().beginTransaction()
+                        .replace(R.id.fragment_container, new ComputeLoanFragment())
+                        .commit();
+            }
+        });
 
-        //textOutputMonthlyPayment.setText("Monthly Payment: " + monthlyPayment);
+        view.findViewById(R.id.buttonSavings).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Replace the current fragment with SavingsFragment
+                getChildFragmentManager().beginTransaction()
+                        .replace(R.id.fragment_container, new ComputeSavingsFragment())
+                        .commit();
+            }
+        });
+
+        return view;
     }
 }

@@ -2,7 +2,13 @@
     <string name="app_name">LocalLoan</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="loan_amount">Loan Amount</string>
-    <string name="interest">Interest</string>
-    <string name="term">Term</string>
+    <string name="loan_amount">Loan Amount (Php)</string>
+    <string name="term_months">Term (in Months)</string>
+    <string name="loan">Loan</string>
+    <string name="savings">Savings</string>
+    <string name="interest_rate">Interest Rate (%)</string>
+    <string name="principal">Principal (Php)</string>
+    <string name="annual_interest_rate">Annual Interest Rate (%)</string>
+    <string name="term_years">Term (in Years)</string>
+    <string name="monthly_contribution">Monthly Contribution (Php)</string>
 </resources>
