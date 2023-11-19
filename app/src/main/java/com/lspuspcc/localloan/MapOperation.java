@@ -43,8 +43,6 @@ public class MapOperation {
     }
 
     public void setCustomMapOverlays(ArrayList overlays) {
-
-
         ItemizedOverlayWithFocus<OverlayItem> mOverlay = new ItemizedOverlayWithFocus<OverlayItem>(overlays,
                 new ItemizedIconOverlay.OnItemGestureListener<OverlayItem>() {
                     @Override
@@ -56,7 +54,6 @@ public class MapOperation {
                         return false;
                     }
                 }, context);
-
         mOverlay.setFocusItemsOnTap(true);
         mapView.getOverlays().add(mOverlay);
     }

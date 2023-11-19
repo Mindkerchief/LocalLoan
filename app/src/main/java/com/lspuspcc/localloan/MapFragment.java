@@ -27,6 +27,7 @@ import org.osmdroid.views.MapView;
 import org.osmdroid.views.overlay.OverlayItem;
 import org.osmdroid.views.overlay.mylocation.MyLocationNewOverlay;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
 /**
@@ -51,6 +52,7 @@ public class MapFragment extends Fragment {
     private LocationTracking liveLocation;
     private LocationManager locationManager;
     private GeoPoint currentlocation = new GeoPoint(12.70000, 122.70000);;
+    private DatabaseHelper databaseHelper;
     private double currentZoom = 7.5;
 
     public MapFragment() {
@@ -91,6 +93,7 @@ public class MapFragment extends Fragment {
         Context context = requireContext().getApplicationContext();
         mapView = rootView.findViewById(R.id.osmMap);
         locationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
+        databaseHelper = new DatabaseHelper(context);
         Configuration.getInstance().load(context, PreferenceManager.getDefaultSharedPreferences(context));
 
         mapOperation = new MapOperation(context, mapView);
@@ -99,7 +102,10 @@ public class MapFragment extends Fragment {
         mapOperation.enableMapControls();
 
         locateGpsBtnOnClick(context);
-        mapOperation.setCustomMapOverlays(getOverlays());
+        try {
+            setMapOverlays();
+        } catch (IOException e) {
+        }
 
         // FloatingActionButtons OnClickListeners
         FloatingActionButton locateGpsBtn = rootView.findViewById(R.id.locateGpsBtn);
@@ -125,10 +131,9 @@ public class MapFragment extends Fragment {
     }
 
     public void locateGpsBtnOnClick(Context context) {
-        // Check for permissions
         if (ContextCompat.checkSelfPermission(context, android.Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED
             && ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED)
-        { // Check if GPS is enabled
+        {
             if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
                 try {
                     liveLocation = new LocationTracking(context);
@@ -164,11 +169,8 @@ public class MapFragment extends Fragment {
         currentZoom = mapView.getZoomLevelDouble();
     }
 
-    private ArrayList getOverlays() {
-        ArrayList<OverlayItem> items = new ArrayList<OverlayItem>();
-        items.add(new OverlayItem("Home", "Jhondale's Location",
-                  new GeoPoint(14.070013,121.324701)));
-
-        return items;
+    private void setMapOverlays() throws IOException {
+        databaseHelper.copyDatabaseFromAssets();
+        mapOperation.setCustomMapOverlays(databaseHelper.getMapMarkers());
     }
 }
