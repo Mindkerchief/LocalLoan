@@ -24,6 +24,8 @@ public class ComputeFragment extends Fragment {
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
 
+    String clicked = "SAVINGS";
+
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
@@ -66,30 +68,35 @@ public class ComputeFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_compute, container, false);
 
         if (savedInstanceState == null) {
-            // Set the default fragment (LoanFragment) when the fragment is created
-            getChildFragmentManager().beginTransaction()
-                    .replace(R.id.fragment_container, new ComputeLoanFragment())
-                    .commit();
-        }
-
-        // Set up navigation buttons
-        view.findViewById(R.id.buttonLoan).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // Replace the current fragment with LoanFragment
+            if (clicked == "SAVINGS") {
                 getChildFragmentManager().beginTransaction()
                         .replace(R.id.fragment_container, new ComputeLoanFragment())
                         .commit();
+                clicked = "LOAN";
+            }
+        }
+
+        view.findViewById(R.id.buttonLoan).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (clicked == "SAVINGS") {
+                    getChildFragmentManager().beginTransaction()
+                            .replace(R.id.fragment_container, new ComputeLoanFragment())
+                            .commit();
+                    clicked = "LOAN";
+                }
             }
         });
 
         view.findViewById(R.id.buttonSavings).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // Replace the current fragment with SavingsFragment
-                getChildFragmentManager().beginTransaction()
-                        .replace(R.id.fragment_container, new ComputeSavingsFragment())
-                        .commit();
+                if (clicked == "LOAN") {
+                    getChildFragmentManager().beginTransaction()
+                            .replace(R.id.fragment_container, new ComputeSavingsFragment())
+                            .commit();
+                    clicked = "SAVINGS";
+                }
             }
         });
 
