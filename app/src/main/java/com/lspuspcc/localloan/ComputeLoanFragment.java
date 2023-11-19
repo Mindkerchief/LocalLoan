@@ -92,23 +92,37 @@ public class ComputeLoanFragment extends Fragment {
                 String loanAmountStr = finalEditTextLoanAmount.getText().toString();
                 String interestRateStr = editTextInterestRate.getText().toString();
                 String termMonthsStr = editTextTerm.getText().toString();
+                try {
+                    double loanAmount = Double.parseDouble(loanAmountStr);
+                    double interestRate = Double.parseDouble(interestRateStr);
+                    int loanTermMonths = Integer.parseInt(termMonthsStr);
 
-                double loanAmount = Double.parseDouble(loanAmountStr);
-                double interestRate = Double.parseDouble(interestRateStr);
-                int loanTermMonths = Integer.parseInt(termMonthsStr);
-
-                double monthlyInterestRate = interestRate / 100 / 12;
-                double monthlyPayment = (loanAmount * monthlyInterestRate) / (1 - Math.pow(1 + monthlyInterestRate, -loanTermMonths));
+                    double monthlyInterestRate = interestRate / 100 / 12;
+                    double monthlyPayment = (loanAmount * monthlyInterestRate) / (1 - Math.pow(1 + monthlyInterestRate, -loanTermMonths));
                     monthlyPayment = Math.round(monthlyPayment * 100);
                     monthlyPayment = monthlyPayment / 100;
-                double totalPayment = monthlyPayment * loanTermMonths;
+                    double totalPayment = monthlyPayment * loanTermMonths;
                     totalPayment = Math.round(totalPayment * 100);
                     totalPayment /= 100;
 
-                String result = "Loan Amount: Php " + loanAmount +
-                        "\nInterest Rate: " + interestRate + "%\nTerm (Months): " + loanTermMonths +
-                        "\nMonthly Payment: Php " + monthlyPayment + "\nTotal Payment: Php " + totalPayment;
-                output.setText(result);
+                    String result = "Loan Amount: Php " + loanAmount +
+                            "\nInterest Rate: " + interestRate + "%\nTerm (Months): " + loanTermMonths +
+                            "\nMonthly Payment: Php " + monthlyPayment + "\nTotal Payment: Php " + totalPayment;
+                    output.setText(result);
+                }
+                catch(NumberFormatException e) {
+                    output.setText("");
+
+                    if (loanAmountStr.isEmpty()) {
+                        finalEditTextLoanAmount.setError("Enter a Valid Loan Amount");
+                    }
+                    if (interestRateStr.isEmpty()) {
+                        editTextInterestRate.setError("Enter a Valid Interest Rate");
+                    }
+                    if (termMonthsStr.isEmpty()) {
+                        editTextTerm.setError("Enter a Valid Term");
+                    }
+                }
             }
         });
 

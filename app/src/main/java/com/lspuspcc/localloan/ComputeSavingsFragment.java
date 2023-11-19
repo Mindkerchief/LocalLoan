@@ -99,27 +99,45 @@ public class ComputeSavingsFragment extends Fragment {
                 String termYearsStr = editTextTerm.getText().toString();
                 String monthlyContributionStr = finalEditTextMonthlyContribution.getText().toString();
 
-                double principal = Double.parseDouble(principalStr);
-                double annualInterestRate = Double.parseDouble(annualInterestRateStr);
-                int loanTermYears = Integer.parseInt(termYearsStr);
-                double monthlyContribution = Double.parseDouble(monthlyContributionStr);
+                try {
+                    double principal = Double.parseDouble(principalStr);
+                    double annualInterestRate = Double.parseDouble(annualInterestRateStr);
+                    int loanTermYears = Integer.parseInt(termYearsStr);
+                    double monthlyContribution = Double.parseDouble(monthlyContributionStr);
 
-                int compoundingPeriodsPerYear = 12;
-                double monthlyInterestRate = annualInterestRate / compoundingPeriodsPerYear / 100;
-                int totalCompoundingPeriods = compoundingPeriodsPerYear * loanTermYears;
+                    int compoundingPeriodsPerYear = 12;
+                    double monthlyInterestRate = annualInterestRate / compoundingPeriodsPerYear / 100;
+                    int totalCompoundingPeriods = compoundingPeriodsPerYear * loanTermYears;
 
-                double futureValue = principal * Math.pow(1 + monthlyInterestRate, totalCompoundingPeriods);
+                    double futureValue = principal * Math.pow(1 + monthlyInterestRate, totalCompoundingPeriods);
 
-                for (int i = 1; i <= totalCompoundingPeriods; i++) {
-                    futureValue += monthlyContribution * Math.pow(1 + monthlyInterestRate, totalCompoundingPeriods - i);
-                }
+                    for (int i = 1; i <= totalCompoundingPeriods; i++) {
+                        futureValue += monthlyContribution * Math.pow(1 + monthlyInterestRate, totalCompoundingPeriods - i);
+                    }
                     futureValue = Math.round(futureValue * 100);
                     futureValue /= 100;
 
-                String result = "Principal: Php " + principal +
-                        "\nAnnual Interest Rate: " + annualInterestRate + "%\nTerm (Years): " + loanTermYears +
-                        "\nMonthly Contribution: Php " + monthlyContribution + "\nFuture Value: Php " + futureValue;
-                output.setText(result);
+                    String result = "Principal: Php " + principal +
+                            "\nAnnual Interest Rate: " + annualInterestRate + "%\nTerm (Years): " + loanTermYears +
+                            "\nMonthly Contribution: Php " + monthlyContribution + "\nFuture Value: Php " + futureValue;
+                    output.setText(result);
+                }
+                catch(NumberFormatException e) {
+                    output.setText("");
+
+                    if (principalStr.isEmpty()) {
+                        finalEditTextPrincipal.setError("Enter a Valid Principal");
+                    }
+                    if (annualInterestRateStr.isEmpty()) {
+                        editTextAnnualInterestRate.setError("Enter a Valid Interest Rate");
+                    }
+                    if (termYearsStr.isEmpty()) {
+                        editTextTerm.setError("Enter a Valid Term");
+                    }
+                    if (monthlyContributionStr.isEmpty()) {
+                        finalEditTextMonthlyContribution.setError("Enter a Valid Monthly Contribution");
+                    }
+                }
             }
         });
 
