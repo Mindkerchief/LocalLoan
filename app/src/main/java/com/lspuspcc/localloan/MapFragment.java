@@ -1,9 +1,7 @@
 package com.lspuspcc.localloan;
 
 import android.Manifest;
-import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.LocationManager;
@@ -26,6 +24,10 @@ import org.osmdroid.config.Configuration;
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory;
 import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.MapView;
+import org.osmdroid.views.overlay.OverlayItem;
+import org.osmdroid.views.overlay.mylocation.MyLocationNewOverlay;
+
+import java.util.ArrayList;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -44,6 +46,8 @@ public class MapFragment extends Fragment {
     private String mParam2;
 
     private MapView mapView;
+    private MapOperation mapOperation;
+    private MyLocationNewOverlay locationOverlay;
     private LocationTracking liveLocation;
     private LocationManager locationManager;
     private GeoPoint currentlocation = new GeoPoint(12.70000, 122.70000);;
@@ -83,21 +87,19 @@ public class MapFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_map, container, false);
-        mapView = rootView.findViewById(R.id.osmMap);
-
         Context context = requireContext().getApplicationContext();
+        mapView = rootView.findViewById(R.id.osmMap);
+        locationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
         Configuration.getInstance().load(context, PreferenceManager.getDefaultSharedPreferences(context));
 
+        mapOperation = new MapOperation(context, mapView);
         mapView.setTileSource(TileSourceFactory.MAPNIK);
-        mapView.setBuiltInZoomControls(false);
-        mapView.setMultiTouchControls(true);
-
-        locationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
+        mapOperation.setMapCompass();
+        mapOperation.enableMapControls();
 
         locateGpsBtnOnClick(context);
-        //showGpsSettingsDialog(context);
+        mapOperation.setCustomMapOverlays(getOverlays());
 
         // FloatingActionButtons OnClickListeners
         FloatingActionButton locateGpsBtn = rootView.findViewById(R.id.locateGpsBtn);
@@ -141,8 +143,8 @@ public class MapFragment extends Fragment {
 
         if (currentlocation != null) {
             IMapController mapController = mapView.getController();
-            mapController.setZoom(currentZoom);
             mapController.animateTo(currentlocation, currentZoom, 500L);
+            mapOperation.setCurrentLocationOverlay();
             currentlocation = null;
         }
         else {
@@ -160,5 +162,13 @@ public class MapFragment extends Fragment {
     public void zoomOutBtnOnClick() {
         mapView.getController().zoomOut();
         currentZoom = mapView.getZoomLevelDouble();
+    }
+
+    private ArrayList getOverlays() {
+        ArrayList<OverlayItem> items = new ArrayList<OverlayItem>();
+        items.add(new OverlayItem("Home", "Jhondale's Location",
+                  new GeoPoint(14.070013,121.324701)));
+
+        return items;
     }
 }
