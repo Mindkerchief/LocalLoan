@@ -5,7 +5,9 @@ import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
 
+import android.text.Editable;
 import android.text.InputType;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -68,23 +70,26 @@ public class ComputeLoanFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_compute_loan, container, false);
 
         EditText editTextLoanAmount = view.findViewById(R.id.editTextLoanAmount);
+            editTextLoanAmount = view.findViewById(R.id.editTextLoanAmount);
+            restrictDecimalPlaces(editTextLoanAmount, 2);
         EditText editTextInterestRate = view.findViewById(R.id.editTextInterestRate);
         EditText editTextTerm = view.findViewById(R.id.editTextTerm);
             editTextTerm.setInputType(InputType.TYPE_CLASS_NUMBER);
         Button buttonComputeLoan = view.findViewById(R.id.btnComputeLoan);
         TextView output = view.findViewById(R.id.textOutput);
 
+        EditText finalEditTextLoanAmount = editTextLoanAmount;
         buttonComputeLoan.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 InputMethodManager inputMethodManager = (InputMethodManager) requireContext().getSystemService(Context.INPUT_METHOD_SERVICE);
                 inputMethodManager.hideSoftInputFromWindow(v.getWindowToken(), 0);
 
-                editTextLoanAmount.clearFocus();
+                finalEditTextLoanAmount.clearFocus();
                 editTextInterestRate.clearFocus();
                 editTextTerm.clearFocus();
 
-                String loanAmountStr = editTextLoanAmount.getText().toString();
+                String loanAmountStr = finalEditTextLoanAmount.getText().toString();
                 String interestRateStr = editTextInterestRate.getText().toString();
                 String termMonthsStr = editTextTerm.getText().toString();
 
@@ -94,23 +99,28 @@ public class ComputeLoanFragment extends Fragment {
 
                 double monthlyInterestRate = interestRate / 100 / 12;
                 double monthlyPayment = (loanAmount * monthlyInterestRate) / (1 - Math.pow(1 + monthlyInterestRate, -loanTermMonths));
+                    monthlyPayment = Math.round(monthlyPayment * 100);
+                    monthlyPayment = monthlyPayment / 100;
                 double totalPayment = monthlyPayment * loanTermMonths;
+                    totalPayment = Math.round(totalPayment * 100);
+                    totalPayment /= 100;
 
-                String result = String.format("Loan Amount: Php " + loanAmount +
-                        "\nInterest Rate: " + interestRate + "%%\nTerm (Months): " + loanTermMonths +
-                        "\nMonthly Payment: Php " + monthlyPayment + "\nTotal Payment: " + totalPayment);
+                String result = "Loan Amount: Php " + loanAmount +
+                        "\nInterest Rate: " + interestRate + "%\nTerm (Months): " + loanTermMonths +
+                        "\nMonthly Payment: Php " + monthlyPayment + "\nTotal Payment: Php " + totalPayment;
                 output.setText(result);
             }
         });
 
-        View rootView = view.findViewById(R.id.frameLayout2); // Replace with the actual ID of your root layout
+        View rootView = view.findViewById(R.id.frameLayout2);
+        EditText finalEditTextLoanAmount1 = editTextLoanAmount;
         rootView.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 InputMethodManager inputMethodManager = (InputMethodManager) requireContext().getSystemService(Context.INPUT_METHOD_SERVICE);
                 inputMethodManager.hideSoftInputFromWindow(v.getWindowToken(), 0);
 
-                editTextLoanAmount.clearFocus();
+                finalEditTextLoanAmount1.clearFocus();
                 editTextInterestRate.clearFocus();
                 editTextTerm.clearFocus();
 
@@ -119,5 +129,31 @@ public class ComputeLoanFragment extends Fragment {
         });
 
     return view;
+    }
+
+    private void restrictDecimalPlaces(EditText editText, final int maxDecimalPlaces) {
+        editText.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
+
+        editText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                String input = editable.toString();
+
+                int dotIndex = input.indexOf(".");
+                if (dotIndex != -1 && input.length() - dotIndex > maxDecimalPlaces + 1) {
+                    editable.delete(dotIndex + maxDecimalPlaces + 1, editable.length());
+                }
+            }
+        });
     }
 }
