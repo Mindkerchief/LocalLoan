@@ -90,7 +90,7 @@ public class MapFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_map, container, false);
-        Context context = requireContext().getApplicationContext();
+        Context context = getActivity();
         mapView = rootView.findViewById(R.id.osmMap);
         locationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
         databaseHelper = new DatabaseHelper(context);

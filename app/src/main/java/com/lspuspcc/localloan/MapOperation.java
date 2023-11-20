@@ -2,6 +2,8 @@ package com.lspuspcc.localloan;
 
 import android.content.Context;
 
+import androidx.fragment.app.FragmentTransaction;
+
 import org.osmdroid.views.MapView;
 import org.osmdroid.views.overlay.ItemizedIconOverlay;
 import org.osmdroid.views.overlay.ItemizedOverlayWithFocus;
@@ -47,6 +49,8 @@ public class MapOperation {
                 new ItemizedIconOverlay.OnItemGestureListener<OverlayItem>() {
                     @Override
                     public boolean onItemSingleTapUp(final int index, final OverlayItem item) {
+                        MainActivity mainActivity = (MainActivity) context;
+                        mainActivity.addFragment(new MarkerViewFragment());
                         return true;
                     }
                     @Override

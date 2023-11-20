@@ -15,6 +15,7 @@ public class MainActivity extends AppCompatActivity {
 
     private BottomNavigationView bottomNavigation;
     public MapFragment mapFragment;
+    public FragmentTransaction fragmentTransaction;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -23,6 +24,7 @@ public class MainActivity extends AppCompatActivity {
 
         checkPermissions();
 
+        fragmentTransaction = getSupportFragmentManager().beginTransaction();
         mapFragment = new MapFragment();
         replaceFragment(mapFragment);
 
@@ -65,10 +67,17 @@ public class MainActivity extends AppCompatActivity {
         return false;
     }
 
-    private void replaceFragment(Fragment fragment) {
-        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+    public void replaceFragment(Fragment fragment) {
+        fragmentTransaction = getSupportFragmentManager().beginTransaction();
         fragmentTransaction.replace(R.id.mainFrame, fragment)
             .addToBackStack(null)
             .commit();
+    }
+
+    public void addFragment(Fragment fragment) {
+        fragmentTransaction = getSupportFragmentManager().beginTransaction();
+        fragmentTransaction.add(R.id.mainFrame, fragment)
+                .addToBackStack(null)
+                .commit();
     }
 }
