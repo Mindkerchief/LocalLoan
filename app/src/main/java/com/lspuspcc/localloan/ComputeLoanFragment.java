@@ -200,13 +200,12 @@ public class ComputeLoanFragment extends Fragment {
         for (int i = 1; i <= termMonths; i++) {
             TableRow row = new TableRow(getContext());
 
-            String paymentDate = calculatePaymentDate(i);
-
-            addTableCell(row, paymentDate);
+            addTableCell(row, String.valueOf(i));
             addTableCell(row, String.format("Php %.2f", monthlyPayment));
 
             double interest = loanAmount * monthlyInterestRate;
-            double principal = monthlyPayment - interest;
+
+            double principal = Math.min(loanAmount, monthlyPayment - interest);
 
             addTableCell(row, String.format("Php %.2f", principal));
             addTableCell(row, String.format("Php %.2f", interest));
@@ -223,9 +222,6 @@ public class ComputeLoanFragment extends Fragment {
         return tableLayout;
     }
 
-    private String calculatePaymentDate(int month) {
-        return month + "";
-    }
 
     private void addTableCell(TableRow row, String text) {
         TextView textView = new TextView(getContext());
