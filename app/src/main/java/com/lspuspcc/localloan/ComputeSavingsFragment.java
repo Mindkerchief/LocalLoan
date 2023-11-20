@@ -15,6 +15,7 @@ import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.HorizontalScrollView;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
@@ -83,50 +84,42 @@ public class ComputeSavingsFragment extends Fragment {
         Button buttonComputeSavings = view.findViewById(R.id.btnComputeSavings);
         TextView output = view.findViewById(R.id.textOutput);
         TableLayout tableSavings = view.findViewById(R.id.tableSavings);
-
+        View rootView = view.findViewById(R.id.frameLayout3);
+        HorizontalScrollView horizontalScrollView = view.findViewById(R.id.horizontalScrollViewSavings);
         EditText finalEditTextPrincipal = editTextPrincipal;
         EditText finalEditTextMonthlyContribution = editTextMonthlyContribution;
         buttonComputeSavings.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                InputMethodManager inputMethodManager = (InputMethodManager) requireContext().getSystemService(Context.INPUT_METHOD_SERVICE);
-                inputMethodManager.hideSoftInputFromWindow(v.getWindowToken(), 0);
-
-                finalEditTextPrincipal.clearFocus();
-                editTextAnnualInterestRate.clearFocus();
-                editTextTerm.clearFocus();
-                finalEditTextMonthlyContribution.clearFocus();
+                clearFocus(v, finalEditTextPrincipal, editTextAnnualInterestRate, editTextTerm, finalEditTextMonthlyContribution);
 
                 String principalStr = finalEditTextPrincipal.getText().toString();
                 String annualInterestRateStr = editTextAnnualInterestRate.getText().toString();
-                String termYearsStr = editTextTerm.getText().toString();
+                String termMonthsStr = editTextTerm.getText().toString();
                 String monthlyContributionStr = finalEditTextMonthlyContribution.getText().toString();
 
                 try {
                     double principal = Double.parseDouble(principalStr);
                     double annualInterestRate = Double.parseDouble(annualInterestRateStr);
-                    int loanTermYears = Integer.parseInt(termYearsStr);
+                    int savingsTermMonths = Integer.parseInt(termMonthsStr);
                     double monthlyContribution = Double.parseDouble(monthlyContributionStr);
 
-                    int compoundingPeriodsPerYear = 12;
-                    double monthlyInterestRate = annualInterestRate / compoundingPeriodsPerYear / 100;
-                    int totalCompoundingPeriods = compoundingPeriodsPerYear * loanTermYears;
-
+                    double monthlyInterestRate = annualInterestRate / 12 / 100;
                     double futureValue = principal;
 
-                    for (int i = 1; i <= totalCompoundingPeriods; i++) {
+                    for (int i = 1; i <= savingsTermMonths; i++) {
                         futureValue = futureValue * (1 + monthlyInterestRate) + monthlyContribution;
                     }
                     futureValue = Math.round(futureValue * 100);
                     futureValue /= 100;
 
                     String result = "Principal: Php " + principal +
-                            "\nAnnual Interest Rate: " + annualInterestRate + "%\nTerm (Years): " + loanTermYears +
+                            "\nAnnual Interest Rate: " + annualInterestRate + "%\nTerm (Months): " + savingsTermMonths +
                             "\nMonthly Contribution: Php " + monthlyContribution + "\nFuture Value: Php " + futureValue + "\n";
                     output.setText(result);
 
                     tableSavings.removeAllViews();
-                    TableLayout output = generateSavingsTable(principal, annualInterestRate, loanTermYears, monthlyContribution);
+                    TableLayout output = generateSavingsTable(principal, monthlyInterestRate, savingsTermMonths, monthlyContribution);
                     tableSavings.addView(output);
                 }
                 catch(NumberFormatException e) {
@@ -139,7 +132,7 @@ public class ComputeSavingsFragment extends Fragment {
                     if (annualInterestRateStr.isEmpty()) {
                         editTextAnnualInterestRate.setError("Enter a Valid Interest Rate");
                     }
-                    if (termYearsStr.isEmpty()) {
+                    if (termMonthsStr.isEmpty()) {
                         editTextTerm.setError("Enter a Valid Term");
                     }
                     if (monthlyContributionStr.isEmpty()) {
@@ -149,20 +142,18 @@ public class ComputeSavingsFragment extends Fragment {
             }
         });
 
-        View rootView = view.findViewById(R.id.frameLayout3);
-        EditText finalEditTextPrincipal1 = editTextPrincipal;
-        EditText finalEditTextMonthlyContribution1 = editTextMonthlyContribution;
         rootView.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
-                InputMethodManager inputMethodManager = (InputMethodManager) requireContext().getSystemService(Context.INPUT_METHOD_SERVICE);
-                inputMethodManager.hideSoftInputFromWindow(v.getWindowToken(), 0);
+                clearFocus(v, finalEditTextPrincipal, editTextAnnualInterestRate, editTextTerm, finalEditTextMonthlyContribution);
+                return false;
+            }
+        });
 
-                finalEditTextPrincipal1.clearFocus();
-                editTextAnnualInterestRate.clearFocus();
-                editTextTerm.clearFocus();
-                finalEditTextMonthlyContribution1.clearFocus();
-
+        horizontalScrollView.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                clearFocus(v, finalEditTextPrincipal, editTextAnnualInterestRate, editTextTerm, finalEditTextMonthlyContribution);
                 return false;
             }
         });
@@ -196,7 +187,7 @@ public class ComputeSavingsFragment extends Fragment {
         });
     }
 
-    private TableLayout generateSavingsTable(double principal, double annualInterestRate, int termYears, double monthlyContribution) {
+    private TableLayout generateSavingsTable(double principal, double monthlyInterestRate, int totalCompoundingPeriods, double monthlyContribution) {
         TableLayout tableLayout = new TableLayout(getContext());
         tableLayout.setLayoutParams(new TableLayout.LayoutParams(TableLayout.LayoutParams.MATCH_PARENT, TableLayout.LayoutParams.WRAP_CONTENT));
 
@@ -210,12 +201,7 @@ public class ComputeSavingsFragment extends Fragment {
 
         tableLayout.addView(headerRow);
 
-        int compoundingPeriodsPerYear = 12;
-        double monthlyInterestRate = annualInterestRate / compoundingPeriodsPerYear / 100;
-        int totalCompoundingPeriods = compoundingPeriodsPerYear * termYears;
-
         double totalInterest = 0;
-        double balance = principal;
 
         for (int i = 1; i <= totalCompoundingPeriods; i++) {
             TableRow row = new TableRow(getContext());
@@ -223,14 +209,14 @@ public class ComputeSavingsFragment extends Fragment {
             addTableCell(row, String.valueOf(i));
             addTableCell(row, String.format("Php %.2f", monthlyContribution));
 
-            double interest = balance * monthlyInterestRate;
+            double interest = principal * monthlyInterestRate;
             addTableCell(row, String.format("Php %.2f", interest));
 
             totalInterest += interest;
             addTableCell(row, String.format("Php %.2f", totalInterest));
 
-            balance = balance * (1 + monthlyInterestRate) + monthlyContribution;
-            addTableCell(row, String.format("Php %.2f", balance));
+            principal = principal * (1 + monthlyInterestRate) + monthlyContribution;
+            addTableCell(row, String.format("Php %.2f", principal));
 
             tableLayout.addView(row);
         }
@@ -245,4 +231,13 @@ public class ComputeSavingsFragment extends Fragment {
         row.addView(textView);
     }
 
+    private void clearFocus(View v, EditText editTextPrincipal, EditText editTextAnnualInterestRate, EditText editTextTerm, EditText editTextMonthlyContribution) {
+        InputMethodManager inputMethodManager = (InputMethodManager) requireContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+        inputMethodManager.hideSoftInputFromWindow(v.getWindowToken(), 0);
+
+        editTextPrincipal.clearFocus();
+        editTextAnnualInterestRate.clearFocus();
+        editTextTerm.clearFocus();
+        editTextMonthlyContribution.clearFocus();
+    }
 }

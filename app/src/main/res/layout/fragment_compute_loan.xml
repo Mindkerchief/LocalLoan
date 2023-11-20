@@ -59,7 +59,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="27dp"
         android:layout_marginEnd="16dp"
-        android:text="Compute Loan"
+        android:text="COMPUTE"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/editTextTerm" />
 
@@ -96,6 +96,7 @@
         app:layout_constraintTop_toBottomOf="@+id/editTextInterestRate" />
 
     <HorizontalScrollView
+        android:id="@+id/horizontalScrollViewLoan"
         android:layout_width="0dp"
         android:layout_height="0dp"
         app:layout_constraintBottom_toBottomOf="parent"
