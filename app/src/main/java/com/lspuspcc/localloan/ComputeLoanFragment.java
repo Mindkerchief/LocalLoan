@@ -4,6 +4,8 @@ import android.content.Context;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 
 import android.text.Editable;
 import android.text.InputType;
@@ -15,7 +17,11 @@ import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TableLayout;
+import android.widget.TableRow;
 import android.widget.TextView;
+
+import java.util.List;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -77,6 +83,7 @@ public class ComputeLoanFragment extends Fragment {
             editTextTerm.setInputType(InputType.TYPE_CLASS_NUMBER);
         Button buttonComputeLoan = view.findViewById(R.id.btnComputeLoan);
         TextView output = view.findViewById(R.id.textOutput);
+        TableLayout tableLoanAmortization = view.findViewById(R.id.tableLoanAmortization);
 
         EditText finalEditTextLoanAmount = editTextLoanAmount;
         buttonComputeLoan.setOnClickListener(new View.OnClickListener() {
@@ -97,7 +104,7 @@ public class ComputeLoanFragment extends Fragment {
                     double interestRate = Double.parseDouble(interestRateStr);
                     int loanTermMonths = Integer.parseInt(termMonthsStr);
 
-                    double monthlyInterestRate = interestRate / 100 / 12;
+                    double monthlyInterestRate = interestRate / 12 / 100;
                     double monthlyPayment = (loanAmount * monthlyInterestRate) / (1 - Math.pow(1 + monthlyInterestRate, -loanTermMonths));
                     monthlyPayment = Math.round(monthlyPayment * 100);
                     monthlyPayment = monthlyPayment / 100;
@@ -107,11 +114,16 @@ public class ComputeLoanFragment extends Fragment {
 
                     String result = "Loan Amount: Php " + loanAmount +
                             "\nInterest Rate: " + interestRate + "%\nTerm (Months): " + loanTermMonths +
-                            "\nMonthly Payment: Php " + monthlyPayment + "\nTotal Payment: Php " + totalPayment;
+                            "\nMonthly Payment: Php " + monthlyPayment + "\nTotal Payment: Php " + totalPayment + "\n";
                     output.setText(result);
+
+                    tableLoanAmortization.removeAllViews();
+                    TableLayout output = generateAmortizationTable(loanAmount, interestRate, loanTermMonths);
+                    tableLoanAmortization.addView(output);
                 }
                 catch(NumberFormatException e) {
                     output.setText("");
+                    tableLoanAmortization.removeAllViews();
 
                     if (loanAmountStr.isEmpty()) {
                         finalEditTextLoanAmount.setError("Enter a Valid Loan Amount");
@@ -169,5 +181,66 @@ public class ComputeLoanFragment extends Fragment {
                 }
             }
         });
+    }
+
+    private TableLayout generateAmortizationTable(double loanAmount, double interestRate, int termMonths) {
+        TableLayout tableLayout = new TableLayout(getContext());
+        tableLayout.setLayoutParams(new TableLayout.LayoutParams(TableLayout.LayoutParams.MATCH_PARENT, TableLayout.LayoutParams.WRAP_CONTENT));
+
+        TableRow headerRow = new TableRow(getContext());
+
+        addTableCell(headerRow, "No.");
+        addTableCell(headerRow, "Payment");
+        addTableCell(headerRow, "Principal");
+        addTableCell(headerRow, "Interest");
+        addTableCell(headerRow, "Total Interest");
+        addTableCell(headerRow, "Balance");
+
+        tableLayout.addView(headerRow);
+
+        double monthlyInterestRate = interestRate / 100 / 12;
+        double monthlyPayment = calculateMonthlyPayment(loanAmount, monthlyInterestRate, termMonths);
+        double totalInterest = 0;
+        double balance = loanAmount;
+
+        for (int i = 1; i <= termMonths; i++) {
+            TableRow row = new TableRow(getContext());
+
+            String paymentDate = calculatePaymentDate(i);
+
+            addTableCell(row, paymentDate);
+            addTableCell(row, String.format("Php %.2f", monthlyPayment));
+
+            double interest = balance * monthlyInterestRate;
+            double principal = monthlyPayment - interest;
+
+            addTableCell(row, String.format("Php %.2f", principal));
+            addTableCell(row, String.format("Php %.2f", interest));
+
+            totalInterest += interest;
+            addTableCell(row, String.format("Php %.2f", totalInterest));
+
+            balance -= principal;
+            addTableCell(row, String.format("Php %.2f", balance));
+
+            tableLayout.addView(row);
+        }
+
+        return tableLayout;
+    }
+
+    private double calculateMonthlyPayment(double loanAmount, double monthlyInterestRate, int termMonths) {
+        return (loanAmount * monthlyInterestRate) / (1 - Math.pow(1 + monthlyInterestRate, -termMonths));
+    }
+
+    private String calculatePaymentDate(int month) {
+        return month + "";
+    }
+
+    private void addTableCell(TableRow row, String text) {
+        TextView textView = new TextView(getContext());
+        textView.setText(text);
+        textView.setPadding(16, 8, 16, 8);
+        row.addView(textView);
     }
 }

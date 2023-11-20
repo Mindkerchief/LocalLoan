@@ -15,6 +15,8 @@ import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TableLayout;
+import android.widget.TableRow;
 import android.widget.TextView;
 
 /**
@@ -80,6 +82,7 @@ public class ComputeSavingsFragment extends Fragment {
             restrictDecimalPlaces(editTextMonthlyContribution, 2);
         Button buttonComputeSavings = view.findViewById(R.id.btnComputeSavings);
         TextView output = view.findViewById(R.id.textOutput);
+        TableLayout tableSavings = view.findViewById(R.id.tableSavings);
 
         EditText finalEditTextPrincipal = editTextPrincipal;
         EditText finalEditTextMonthlyContribution = editTextMonthlyContribution;
@@ -109,21 +112,26 @@ public class ComputeSavingsFragment extends Fragment {
                     double monthlyInterestRate = annualInterestRate / compoundingPeriodsPerYear / 100;
                     int totalCompoundingPeriods = compoundingPeriodsPerYear * loanTermYears;
 
-                    double futureValue = principal * Math.pow(1 + monthlyInterestRate, totalCompoundingPeriods);
+                    double futureValue = principal;
 
                     for (int i = 1; i <= totalCompoundingPeriods; i++) {
-                        futureValue += monthlyContribution * Math.pow(1 + monthlyInterestRate, totalCompoundingPeriods - i);
+                        futureValue = futureValue * (1 + monthlyInterestRate) + monthlyContribution;
                     }
                     futureValue = Math.round(futureValue * 100);
                     futureValue /= 100;
 
                     String result = "Principal: Php " + principal +
                             "\nAnnual Interest Rate: " + annualInterestRate + "%\nTerm (Years): " + loanTermYears +
-                            "\nMonthly Contribution: Php " + monthlyContribution + "\nFuture Value: Php " + futureValue;
+                            "\nMonthly Contribution: Php " + monthlyContribution + "\nFuture Value: Php " + futureValue + "\n";
                     output.setText(result);
+
+                    tableSavings.removeAllViews();
+                    TableLayout output = generateSavingsTable(principal, annualInterestRate, loanTermYears, monthlyContribution);
+                    tableSavings.addView(output);
                 }
                 catch(NumberFormatException e) {
                     output.setText("");
+                    tableSavings.removeAllViews();
 
                     if (principalStr.isEmpty()) {
                         finalEditTextPrincipal.setError("Enter a Valid Principal");
@@ -187,4 +195,54 @@ public class ComputeSavingsFragment extends Fragment {
             }
         });
     }
+
+    private TableLayout generateSavingsTable(double principal, double annualInterestRate, int termYears, double monthlyContribution) {
+        TableLayout tableLayout = new TableLayout(getContext());
+        tableLayout.setLayoutParams(new TableLayout.LayoutParams(TableLayout.LayoutParams.MATCH_PARENT, TableLayout.LayoutParams.WRAP_CONTENT));
+
+        TableRow headerRow = new TableRow(getContext());
+
+        addTableCell(headerRow, "No.");
+        addTableCell(headerRow, "Deposit");
+        addTableCell(headerRow, "Interest");
+        addTableCell(headerRow, "Total Interest");
+        addTableCell(headerRow, "Balance");
+
+        tableLayout.addView(headerRow);
+
+        int compoundingPeriodsPerYear = 12;
+        double monthlyInterestRate = annualInterestRate / compoundingPeriodsPerYear / 100;
+        int totalCompoundingPeriods = compoundingPeriodsPerYear * termYears;
+
+        double totalInterest = 0;
+        double balance = principal;
+
+        for (int i = 1; i <= totalCompoundingPeriods; i++) {
+            TableRow row = new TableRow(getContext());
+
+            addTableCell(row, String.valueOf(i));
+            addTableCell(row, String.format("Php %.2f", monthlyContribution));
+
+            double interest = balance * monthlyInterestRate;
+            addTableCell(row, String.format("Php %.2f", interest));
+
+            totalInterest += interest;
+            addTableCell(row, String.format("Php %.2f", totalInterest));
+
+            balance = balance * (1 + monthlyInterestRate) + monthlyContribution;
+            addTableCell(row, String.format("Php %.2f", balance));
+
+            tableLayout.addView(row);
+        }
+
+        return tableLayout;
+    }
+
+    private void addTableCell(TableRow row, String text) {
+        TextView textView = new TextView(getContext());
+        textView.setText(text);
+        textView.setPadding(16, 8, 16, 8);
+        row.addView(textView);
+    }
+
 }
