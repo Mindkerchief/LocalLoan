@@ -17,6 +17,7 @@ import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.HorizontalScrollView;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
@@ -84,17 +85,13 @@ public class ComputeLoanFragment extends Fragment {
         Button buttonComputeLoan = view.findViewById(R.id.btnComputeLoan);
         TextView output = view.findViewById(R.id.textOutput);
         TableLayout tableLoanAmortization = view.findViewById(R.id.tableLoanAmortization);
-
+        View rootView = view.findViewById(R.id.frameLayout2);
+        HorizontalScrollView horizontalScrollView = view.findViewById(R.id.horizontalScrollViewLoan);
         EditText finalEditTextLoanAmount = editTextLoanAmount;
         buttonComputeLoan.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                InputMethodManager inputMethodManager = (InputMethodManager) requireContext().getSystemService(Context.INPUT_METHOD_SERVICE);
-                inputMethodManager.hideSoftInputFromWindow(v.getWindowToken(), 0);
-
-                finalEditTextLoanAmount.clearFocus();
-                editTextInterestRate.clearFocus();
-                editTextTerm.clearFocus();
+                clearFocus(v, finalEditTextLoanAmount, editTextInterestRate, editTextTerm);
 
                 String loanAmountStr = finalEditTextLoanAmount.getText().toString();
                 String interestRateStr = editTextInterestRate.getText().toString();
@@ -118,7 +115,7 @@ public class ComputeLoanFragment extends Fragment {
                     output.setText(result);
 
                     tableLoanAmortization.removeAllViews();
-                    TableLayout output = generateAmortizationTable(loanAmount, interestRate, loanTermMonths);
+                    TableLayout output = generateAmortizationTable(loanAmount, monthlyInterestRate, loanTermMonths, monthlyPayment);
                     tableLoanAmortization.addView(output);
                 }
                 catch(NumberFormatException e) {
@@ -138,18 +135,18 @@ public class ComputeLoanFragment extends Fragment {
             }
         });
 
-        View rootView = view.findViewById(R.id.frameLayout2);
-        EditText finalEditTextLoanAmount1 = editTextLoanAmount;
         rootView.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
-                InputMethodManager inputMethodManager = (InputMethodManager) requireContext().getSystemService(Context.INPUT_METHOD_SERVICE);
-                inputMethodManager.hideSoftInputFromWindow(v.getWindowToken(), 0);
+                clearFocus(v, finalEditTextLoanAmount, editTextInterestRate, editTextTerm);
+                return false;
+            }
+        });
 
-                finalEditTextLoanAmount1.clearFocus();
-                editTextInterestRate.clearFocus();
-                editTextTerm.clearFocus();
-
+        horizontalScrollView.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                clearFocus(v, finalEditTextLoanAmount, editTextInterestRate, editTextTerm);
                 return false;
             }
         });
@@ -183,7 +180,7 @@ public class ComputeLoanFragment extends Fragment {
         });
     }
 
-    private TableLayout generateAmortizationTable(double loanAmount, double interestRate, int termMonths) {
+    private TableLayout generateAmortizationTable(double loanAmount, double monthlyInterestRate, int termMonths, double monthlyPayment) {
         TableLayout tableLayout = new TableLayout(getContext());
         tableLayout.setLayoutParams(new TableLayout.LayoutParams(TableLayout.LayoutParams.MATCH_PARENT, TableLayout.LayoutParams.WRAP_CONTENT));
 
@@ -198,10 +195,7 @@ public class ComputeLoanFragment extends Fragment {
 
         tableLayout.addView(headerRow);
 
-        double monthlyInterestRate = interestRate / 100 / 12;
-        double monthlyPayment = calculateMonthlyPayment(loanAmount, monthlyInterestRate, termMonths);
         double totalInterest = 0;
-        double balance = loanAmount;
 
         for (int i = 1; i <= termMonths; i++) {
             TableRow row = new TableRow(getContext());
@@ -211,7 +205,7 @@ public class ComputeLoanFragment extends Fragment {
             addTableCell(row, paymentDate);
             addTableCell(row, String.format("Php %.2f", monthlyPayment));
 
-            double interest = balance * monthlyInterestRate;
+            double interest = loanAmount * monthlyInterestRate;
             double principal = monthlyPayment - interest;
 
             addTableCell(row, String.format("Php %.2f", principal));
@@ -220,17 +214,13 @@ public class ComputeLoanFragment extends Fragment {
             totalInterest += interest;
             addTableCell(row, String.format("Php %.2f", totalInterest));
 
-            balance -= principal;
-            addTableCell(row, String.format("Php %.2f", balance));
+            loanAmount -= principal;
+            addTableCell(row, String.format("Php %.2f", loanAmount));
 
             tableLayout.addView(row);
         }
 
         return tableLayout;
-    }
-
-    private double calculateMonthlyPayment(double loanAmount, double monthlyInterestRate, int termMonths) {
-        return (loanAmount * monthlyInterestRate) / (1 - Math.pow(1 + monthlyInterestRate, -termMonths));
     }
 
     private String calculatePaymentDate(int month) {
@@ -242,5 +232,14 @@ public class ComputeLoanFragment extends Fragment {
         textView.setText(text);
         textView.setPadding(16, 8, 16, 8);
         row.addView(textView);
+    }
+
+    private void clearFocus(View v, EditText editTextLoanAmount, EditText editTextInterestRate, EditText editTextTerm) {
+        InputMethodManager inputMethodManager = (InputMethodManager) requireContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+        inputMethodManager.hideSoftInputFromWindow(v.getWindowToken(), 0);
+
+        editTextLoanAmount.clearFocus();
+        editTextInterestRate.clearFocus();
+        editTextTerm.clearFocus();
     }
 }
