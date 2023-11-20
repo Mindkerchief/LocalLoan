@@ -1,10 +1,6 @@
 package com.lspuspcc.localloan;
 
 import android.content.Context;
-import android.widget.Button;
-import android.widget.TextView;
-
-import androidx.fragment.app.FragmentTransaction;
 
 import org.osmdroid.views.MapView;
 import org.osmdroid.views.overlay.ItemizedIconOverlay;
@@ -15,8 +11,6 @@ import org.osmdroid.views.overlay.compass.InternalCompassOrientationProvider;
 import org.osmdroid.views.overlay.gestures.RotationGestureOverlay;
 import org.osmdroid.views.overlay.mylocation.GpsMyLocationProvider;
 import org.osmdroid.views.overlay.mylocation.MyLocationNewOverlay;
-
-import java.util.ArrayList;
 
 public class MapOperation {
     private Context context;
