@@ -3,7 +3,6 @@ package com.lspuspcc.localloan;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 import android.os.Bundle;
@@ -50,19 +49,30 @@ public class MainActivity extends AppCompatActivity {
         int menuItemId = item.getItemId();
 
         if (menuItemId == R.id.map) {
-            replaceFragment(mapFragment);
-            return true;
+            if (!mapFragment.isVisible()) {
+                replaceFragment(mapFragment);
+                showFragment(mapFragment);
+            }
         }
         else if (menuItemId == R.id.compute) {
-            replaceFragment(new ComputeFragment());
+            if (mapFragment.isVisible())
+                hideFragment(mapFragment);
+
+            addFragment(new ComputeFragment());
             return true;
         }
         else if (menuItemId == R.id.tracker) {
-            replaceFragment(new TrackerFragment());
+            if (mapFragment.isVisible())
+                hideFragment(mapFragment);
+
+            addFragment(new TrackerFragment());
             return true;
         }
         else if (menuItemId == R.id.setting) {
-            replaceFragment(new SettingFragment());
+            if (mapFragment.isVisible())
+                hideFragment(mapFragment);
+
+            addFragment(new SettingFragment());
             return true;
         }
         return false;

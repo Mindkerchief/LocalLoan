@@ -12,7 +12,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.util.ArrayList;
 
 public class DatabaseHelper extends SQLiteOpenHelper {
     private static final String DATABASE_NAME = "EstablishmentMarkersInfo.db";
@@ -31,7 +30,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        // Upgrade the database if needed
     }
 
     public void copyDatabaseFromAssets() throws IOException {
@@ -54,12 +52,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         int index = 0;
 
         SQLiteDatabase db = getReadableDatabase();
-
         Cursor cursor = db.rawQuery("SELECT * FROM " + TABLE_NAME, null);
 
         while (cursor.moveToNext()) {
             MapMarkerInfoWrapper markerInfoWrapper = new MapMarkerInfoWrapper();
-            //String id = Integer.toString(index++);
             String name = cursor.getString(cursor.getColumnIndexOrThrow("establishment_name"));
             String description = cursor.getString(cursor.getColumnIndexOrThrow("business_day"));
             double latitude = cursor.getDouble(cursor.getColumnIndexOrThrow("latitude"));
