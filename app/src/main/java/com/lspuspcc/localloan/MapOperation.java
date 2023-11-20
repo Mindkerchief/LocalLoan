@@ -17,11 +17,13 @@ import org.osmdroid.views.overlay.mylocation.MyLocationNewOverlay;
 import java.util.ArrayList;
 
 public class MapOperation {
-    Context context;
-    MapView mapView;
+    private Context context;
+    private MapView mapView;
+    private MarkerViewFragment markerView;
     public MapOperation(Context context, MapView mapView) {
         this.context = context;
         this.mapView = mapView;
+        this.markerView = new MarkerViewFragment();
     }
     public void setMapCompass() {
         CompassOverlay compassOverlay = new CompassOverlay(context, new InternalCompassOrientationProvider(context), mapView);
@@ -50,7 +52,11 @@ public class MapOperation {
                     @Override
                     public boolean onItemSingleTapUp(final int index, final OverlayItem item) {
                         MainActivity mainActivity = (MainActivity) context;
-                        mainActivity.addFragment(new MarkerViewFragment());
+                        if (markerView != null) {
+                            mainActivity.closeFragment(markerView);
+                        }
+
+                        mainActivity.addFragment(markerView);
                         return true;
                     }
                     @Override

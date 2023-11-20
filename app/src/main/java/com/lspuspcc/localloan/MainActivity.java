@@ -3,6 +3,7 @@ package com.lspuspcc.localloan;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 import android.os.Bundle;
@@ -79,5 +80,11 @@ public class MainActivity extends AppCompatActivity {
         fragmentTransaction.add(R.id.mainFrame, fragment)
                 .addToBackStack(null)
                 .commit();
+    }
+
+    public void closeFragment(Fragment fragment) {
+        fragmentTransaction = getSupportFragmentManager().beginTransaction();
+        fragmentTransaction.remove(fragment);
+        fragmentTransaction.commit();
     }
 }

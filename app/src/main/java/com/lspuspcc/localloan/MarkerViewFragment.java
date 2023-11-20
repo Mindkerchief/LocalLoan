@@ -3,10 +3,13 @@ package com.lspuspcc.localloan;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -58,7 +61,16 @@ public class MarkerViewFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_marker_view, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_marker_view, container, false);
+        ImageButton markerDeatilsCloseBtn = rootView.findViewById(R.id.markerDeatilsCloseBtn);
+        markerDeatilsCloseBtn.setOnClickListener(view -> markerDetailsCloseBtnOnClick());
+        return rootView;
+    }
+
+    private void markerDetailsCloseBtnOnClick() {
+        FragmentManager fragmentManager = getParentFragmentManager();
+        FragmentTransaction transaction = fragmentManager.beginTransaction();
+        transaction.remove(this);
+        transaction.commit();
     }
 }
