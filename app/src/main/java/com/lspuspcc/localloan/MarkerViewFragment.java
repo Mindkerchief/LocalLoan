@@ -9,7 +9,9 @@ import androidx.fragment.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.TextView;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -26,6 +28,15 @@ public class MarkerViewFragment extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
+
+    public TextView establishmentNameText;
+    public TextView establishmentBusinessTimeText;
+    public TextView savingDetailsText;
+    public TextView loanDetailsText;
+    public Button savingsRedirectBtn;
+    public Button loanRedirectBtn;
+
+    private ImageButton markerDeatilsCloseBtn;
 
     public MarkerViewFragment() {
         // Required empty public constructor
@@ -62,7 +73,14 @@ public class MarkerViewFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_marker_view, container, false);
-        ImageButton markerDeatilsCloseBtn = rootView.findViewById(R.id.markerDeatilsCloseBtn);
+        establishmentNameText = rootView.findViewById(R.id.establishmentNameText);
+        establishmentBusinessTimeText = rootView.findViewById(R.id.establishmentBusinessTimeText);
+        savingDetailsText = rootView.findViewById(R.id.savingDetailsText);
+        loanDetailsText = rootView.findViewById(R.id.loanDetailsText);
+        savingsRedirectBtn = rootView.findViewById(R.id.savingsRedirectBtn);
+        loanRedirectBtn = rootView.findViewById(R.id.loanRedirectBtn);
+        markerDeatilsCloseBtn = rootView.findViewById(R.id.markerDeatilsCloseBtn);
+
         markerDeatilsCloseBtn.setOnClickListener(view -> markerDetailsCloseBtnOnClick());
         return rootView;
     }
@@ -70,7 +88,11 @@ public class MarkerViewFragment extends Fragment {
     private void markerDetailsCloseBtnOnClick() {
         FragmentManager fragmentManager = getParentFragmentManager();
         FragmentTransaction transaction = fragmentManager.beginTransaction();
-        transaction.remove(this);
+        transaction.hide(this);
         transaction.commit();
+    }
+
+    public void displayMarkerInfor() {
+
     }
 }

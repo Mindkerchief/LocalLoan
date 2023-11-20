@@ -44,30 +44,41 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         while ((length = myInput.read(buffer)) > 0) {
             myOutput.write(buffer, 0, length);
         }
-
         myOutput.flush();
         myOutput.close();
         myInput.close();
     }
 
-    public ArrayList<OverlayItem> getMapMarkers() {
-        ArrayList<OverlayItem> coordinatesList = new ArrayList<>();
+    public MapObjectWrapper getMapMarkers() {
+        MapObjectWrapper mapObjectWrapper = new MapObjectWrapper();
+        int index = 0;
+
         SQLiteDatabase db = getReadableDatabase();
 
         Cursor cursor = db.rawQuery("SELECT * FROM " + TABLE_NAME, null);
 
         while (cursor.moveToNext()) {
-            String id = Integer.toString(cursor.getInt(cursor.getColumnIndexOrThrow("id")));
+            MapMarkerInfoWrapper markerInfoWrapper = new MapMarkerInfoWrapper();
+            //String id = Integer.toString(index++);
             String name = cursor.getString(cursor.getColumnIndexOrThrow("establishment_name"));
             String description = cursor.getString(cursor.getColumnIndexOrThrow("business_day"));
             double latitude = cursor.getDouble(cursor.getColumnIndexOrThrow("latitude"));
             double longitude = cursor.getDouble(cursor.getColumnIndexOrThrow("longitude"));
 
-            coordinatesList.add(new OverlayItem(name, description, new GeoPoint(latitude, longitude)));
-        }
+            markerInfoWrapper.id = cursor.getInt(cursor.getColumnIndexOrThrow("id"));
+            markerInfoWrapper.establishmentName = name;
+            markerInfoWrapper.businessHour = cursor.getString(cursor.getColumnIndexOrThrow("business_hour"));
+            markerInfoWrapper.businessDay = description;
+            markerInfoWrapper.minimumInitialDeposit = cursor.getInt(cursor.getColumnIndexOrThrow("minimum_initial_deposit"));
+            markerInfoWrapper.savingsInterestRate = cursor.getFloat(cursor.getColumnIndexOrThrow("savings_interest_rate"));
+            markerInfoWrapper.minimumLoanAmount = cursor.getInt(cursor.getColumnIndexOrThrow("minimum_loan_amount"));
+            markerInfoWrapper.monthlyAddonInterestRate = cursor.getFloat(cursor.getColumnIndexOrThrow("monthly_addon_interest_rate"));
 
+            mapObjectWrapper.mapMarkerOverlay.add(new OverlayItem(name, description, new GeoPoint(latitude, longitude)));
+            mapObjectWrapper.mapMarkerInfoWrapper.add(index++, markerInfoWrapper);
+        }
         cursor.close();
         db.close();
-        return coordinatesList;
+        return mapObjectWrapper;
     }
 }

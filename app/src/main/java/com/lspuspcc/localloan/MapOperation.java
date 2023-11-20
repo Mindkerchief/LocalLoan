@@ -1,6 +1,8 @@
 package com.lspuspcc.localloan;
 
 import android.content.Context;
+import android.widget.Button;
+import android.widget.TextView;
 
 import androidx.fragment.app.FragmentTransaction;
 
@@ -20,10 +22,15 @@ public class MapOperation {
     private Context context;
     private MapView mapView;
     private MarkerViewFragment markerView;
+    private MapObjectWrapper mapObjectWrapper;
     public MapOperation(Context context, MapView mapView) {
         this.context = context;
         this.mapView = mapView;
         this.markerView = new MarkerViewFragment();
+        MainActivity mainActivity = (MainActivity) context;
+        mainActivity.addFragment(markerView);
+        mainActivity.hideFragment(markerView);
+
     }
     public void setMapCompass() {
         CompassOverlay compassOverlay = new CompassOverlay(context, new InternalCompassOrientationProvider(context), mapView);
@@ -46,17 +53,28 @@ public class MapOperation {
         mapView.getOverlays().add(locationOverlay);
     }
 
-    public void setCustomMapOverlays(ArrayList overlays) {
-        ItemizedOverlayWithFocus<OverlayItem> mOverlay = new ItemizedOverlayWithFocus<OverlayItem>(overlays,
+    public void setCustomMapOverlays(MapObjectWrapper mapObjectWrapper) {
+        this.mapObjectWrapper = mapObjectWrapper;
+        ItemizedOverlayWithFocus<OverlayItem> mOverlay = new ItemizedOverlayWithFocus<OverlayItem>(mapObjectWrapper.mapMarkerOverlay,
                 new ItemizedIconOverlay.OnItemGestureListener<OverlayItem>() {
                     @Override
-                    public boolean onItemSingleTapUp(final int index, final OverlayItem item) {
+                    public boolean onItemSingleTapUp(int index, OverlayItem item) {
                         MainActivity mainActivity = (MainActivity) context;
-                        if (markerView != null) {
-                            mainActivity.closeFragment(markerView);
-                        }
+                        if (markerView.isVisible())
+                            mainActivity.hideFragment(markerView);
 
-                        mainActivity.addFragment(markerView);
+                        mainActivity.showFragment(markerView);
+
+                        // Look for matching index in the arraylist
+                        MapMarkerInfoWrapper markerInfoWrapper = mapObjectWrapper.mapMarkerInfoWrapper.get(index);
+
+                        markerView.establishmentNameText.setText(markerInfoWrapper.establishmentName);
+                        markerView.establishmentBusinessTimeText.setText("Opens " + markerInfoWrapper.businessDay + " " + markerInfoWrapper.businessHour);
+                        markerView.savingDetailsText.setText("Minimum initial deposit of " + markerInfoWrapper.minimumInitialDeposit);
+                        markerView.loanDetailsText.setText("Minimum loan amount of " + markerInfoWrapper.minimumLoanAmount);
+                        markerView.savingsRedirectBtn.setText("Save for " + markerInfoWrapper.savingsInterestRate);
+                        markerView.loanRedirectBtn.setText("Loan for " + markerInfoWrapper.monthlyAddonInterestRate);
+
                         return true;
                     }
                     @Override

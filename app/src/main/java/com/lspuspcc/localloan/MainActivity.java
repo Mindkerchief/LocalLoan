@@ -82,9 +82,15 @@ public class MainActivity extends AppCompatActivity {
                 .commit();
     }
 
-    public void closeFragment(Fragment fragment) {
+    public void hideFragment(Fragment fragment) {
         fragmentTransaction = getSupportFragmentManager().beginTransaction();
-        fragmentTransaction.remove(fragment);
+        fragmentTransaction.hide(fragment);
+        fragmentTransaction.commit();
+    }
+
+    public void showFragment(Fragment fragment) {
+        fragmentTransaction = getSupportFragmentManager().beginTransaction();
+        fragmentTransaction.show(fragment);
         fragmentTransaction.commit();
     }
 }
