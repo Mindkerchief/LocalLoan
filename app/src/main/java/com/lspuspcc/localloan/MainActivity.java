@@ -14,18 +14,25 @@ import com.google.android.material.navigation.NavigationBarView;
 public class MainActivity extends AppCompatActivity {
 
     private BottomNavigationView bottomNavigation;
-    public MapFragment mapFragment;
-    public FragmentTransaction fragmentTransaction;
+    private MapFragment mapFragment;
+    private ComputeFragment computeFragment;
+    private TrackerFragment trackerFragment;
+    private SettingFragment settingFragment;
+
+    private FragmentTransaction fragmentTransaction;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
         checkPermissions();
 
         fragmentTransaction = getSupportFragmentManager().beginTransaction();
         mapFragment = new MapFragment();
+        computeFragment = new ComputeFragment();
+        trackerFragment = new TrackerFragment();
+        settingFragment = new SettingFragment();
+
         replaceFragment(mapFragment);
 
         bottomNavigation = findViewById(R.id.bottomNavigationMenu);
@@ -50,29 +57,41 @@ public class MainActivity extends AppCompatActivity {
 
         if (menuItemId == R.id.map) {
             if (!mapFragment.isVisible()) {
+                hideFragment(computeFragment);
+                hideFragment(trackerFragment);
+                hideFragment(settingFragment);
                 replaceFragment(mapFragment);
                 showFragment(mapFragment);
             }
         }
         else if (menuItemId == R.id.compute) {
-            if (mapFragment.isVisible())
+            if (!computeFragment.isVisible()) {
                 hideFragment(mapFragment);
-
-            addFragment(new ComputeFragment());
+                hideFragment(trackerFragment);
+                hideFragment(settingFragment);
+                addFragment(computeFragment);
+                showFragment(computeFragment);
+            }
             return true;
         }
         else if (menuItemId == R.id.tracker) {
-            if (mapFragment.isVisible())
+            if (trackerFragment.isVisible()) {
                 hideFragment(mapFragment);
-
-            addFragment(new TrackerFragment());
+                hideFragment(computeFragment);
+                hideFragment(settingFragment);
+                addFragment(trackerFragment);
+                showFragment(trackerFragment);
+            }
             return true;
         }
         else if (menuItemId == R.id.setting) {
-            if (mapFragment.isVisible())
+            if (settingFragment.isVisible()) {
                 hideFragment(mapFragment);
-
-            addFragment(new SettingFragment());
+                hideFragment(computeFragment);
+                hideFragment(trackerFragment);
+                addFragment(settingFragment);
+                showFragment(settingFragment);
+            }
             return true;
         }
         return false;
