@@ -86,20 +86,23 @@ public class MainActivity extends AppCompatActivity {
 
     public void replaceFragment(Fragment fragment) {
         fragmentTransaction = getSupportFragmentManager().beginTransaction();
-        fragmentTransaction.replace(R.id.mainFrame, fragment)
+        fragmentTransaction.replace(R.id.mainFrame, fragment);
+        fragmentTransaction.setTransition(fragmentTransaction.TRANSIT_FRAGMENT_OPEN)
             .addToBackStack(null)
             .commit();
     }
 
     public void addFragment(Fragment fragment) {
         fragmentTransaction = getSupportFragmentManager().beginTransaction();
-        fragmentTransaction.add(R.id.mainFrame, fragment)
+        fragmentTransaction.add(R.id.mainFrame, fragment);
+        fragmentTransaction.setTransition(fragmentTransaction.TRANSIT_FRAGMENT_OPEN)
                 .addToBackStack(null)
                 .commit();
     }
 
     public void hideFragment(Fragment fragment) {
         fragmentTransaction = getSupportFragmentManager().beginTransaction();
+        fragmentTransaction.setTransition(fragmentTransaction.TRANSIT_FRAGMENT_CLOSE);
         fragmentTransaction.hide(fragment);
         fragmentTransaction.commit();
     }
@@ -107,6 +110,7 @@ public class MainActivity extends AppCompatActivity {
     public void showFragment(Fragment fragment) {
         fragmentTransaction = getSupportFragmentManager().beginTransaction();
         fragmentTransaction.show(fragment);
+        fragmentTransaction.setTransition(fragmentTransaction.TRANSIT_FRAGMENT_OPEN);
         fragmentTransaction.commit();
     }
 

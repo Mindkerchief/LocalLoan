@@ -106,6 +106,7 @@ public class MarkerViewFragment extends Fragment {
         FragmentManager fragmentManager = getParentFragmentManager();
         FragmentTransaction transaction = fragmentManager.beginTransaction();
         transaction.hide(this);
+        transaction.setTransition(transaction.TRANSIT_FRAGMENT_CLOSE);
         transaction.commit();
     }
 
