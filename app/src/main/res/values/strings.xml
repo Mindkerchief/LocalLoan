@@ -4,7 +4,7 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="loan_amount">Loan Amount (Php)</string>
     <string name="term_months">Term (in Months)</string>
-    <string name="loan">Loan</string>
+    <string name="loan">Loans</string>
     <string name="savings">Savings</string>
     <string name="interest_rate">Interest Rate (%)</string>
     <string name="principal">Principal (Php)</string>
