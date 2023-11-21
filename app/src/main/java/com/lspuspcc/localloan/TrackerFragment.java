@@ -44,6 +44,7 @@ public class TrackerFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         if (getArguments() != null) {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
@@ -53,8 +54,16 @@ public class TrackerFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
+        View rootView = inflater.inflate(R.layout.fragment_tracker, container, false);
+        tabLayout = rootView.findViewById(R.id.tabLayout);
+        viewPager2 = rootView.findViewById(R.id.viewPager2);
 
-        return inflater.inflate(R.layout.fragment_tracker, container, false);
+        trackerViewPagerAdapter = new TrackerViewPagerAdapter(requireActivity());
+        viewPager2.setAdapter(trackerViewPagerAdapter);
+        // Inflate the layout for this fragment
+        //new TabLayoutMediator(tabLayout, viewPager2, (tab, position) -> tab.setText("Tab " + (position + 1))).attach();
+
+        return rootView;
+        //return inflater.inflate(R.layout.fragment_tracker, container, false);
     }
 }
