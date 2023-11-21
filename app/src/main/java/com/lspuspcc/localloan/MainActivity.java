@@ -21,7 +21,7 @@ public class MainActivity extends AppCompatActivity {
     public ComputeSavingsFragment computeSavingsFragment;
     public ComputeLoanFragment computeLoanFragment;
 
-    private FragmentTransaction fragmentTransaction;
+    public FragmentTransaction fragmentTransaction;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
