@@ -1,5 +1,6 @@
 package com.lspuspcc.localloan;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -16,7 +17,8 @@ import java.io.OutputStream;
 public class DatabaseHelper extends SQLiteOpenHelper {
     private static final String DATABASE_NAME = "EstablishmentMarkersInfo.db";
     private static final int DATABASE_VERSION = 1;
-    private static final String TABLE_NAME = "LocalLoanMarkers";
+    private final String MARKERS_TABLE = "LocalLoanMarkers";
+    private final String LAST_LOCATION_TABLE = "LastLocation";
     private final Context context;
 
     public DatabaseHelper(Context context) {
@@ -33,18 +35,20 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
 
     public void copyDatabaseFromAssets() throws IOException {
-        InputStream myInput = context.getAssets().open(DATABASE_NAME);
-        String outFileName = context.getDatabasePath(DATABASE_NAME).getAbsolutePath();
-        OutputStream myOutput = new FileOutputStream(outFileName);
+        if (context.getDatabasePath(DATABASE_NAME).getAbsolutePath().isEmpty()) {
+            InputStream myInput = context.getAssets().open(DATABASE_NAME);
+            String outFileName = context.getDatabasePath(DATABASE_NAME).getAbsolutePath();
+            OutputStream myOutput = new FileOutputStream(outFileName);
 
-        byte[] buffer = new byte[1024];
-        int length;
-        while ((length = myInput.read(buffer)) > 0) {
-            myOutput.write(buffer, 0, length);
+            byte[] buffer = new byte[1024];
+            int length;
+            while ((length = myInput.read(buffer)) > 0) {
+                myOutput.write(buffer, 0, length);
+            }
+            myOutput.flush();
+            myOutput.close();
+            myInput.close();
         }
-        myOutput.flush();
-        myOutput.close();
-        myInput.close();
     }
 
     public MapObjectWrapper getMapMarkers() {
@@ -52,7 +56,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         int index = 0;
 
         SQLiteDatabase db = getReadableDatabase();
-        Cursor cursor = db.rawQuery("SELECT * FROM " + TABLE_NAME, null);
+        Cursor cursor = db.rawQuery("SELECT * FROM " + MARKERS_TABLE, null);
 
         while (cursor.moveToNext()) {
             MapMarkerInfoWrapper markerInfoWrapper = new MapMarkerInfoWrapper();
@@ -76,5 +80,29 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         cursor.close();
         db.close();
         return mapObjectWrapper;
+    }
+
+    public void setLastLocation(GeoPoint currentLocation) {
+        SQLiteDatabase db = getWritableDatabase();
+        ContentValues values = new ContentValues();
+
+        values.put("latitude", currentLocation.getLatitude());
+        values.put("longitude", currentLocation.getLongitude());
+
+        db.update(LAST_LOCATION_TABLE, values, "id = ?", new String[]{"1"});
+        db.close();
+    }
+
+    public GeoPoint getLastLocation() {
+        GeoPoint currentLocation = null;
+        SQLiteDatabase db = getReadableDatabase();
+        Cursor cursor = db.rawQuery("SELECT * FROM " + LAST_LOCATION_TABLE, null);
+        while (cursor.moveToNext()) {
+            currentLocation = new GeoPoint(cursor.getDouble(cursor.getColumnIndexOrThrow("latitude")),
+                    cursor.getDouble(cursor.getColumnIndexOrThrow("longitude")));
+        }
+        cursor.close();
+        db.close();
+        return currentLocation;
     }
 }

@@ -50,7 +50,7 @@ public class MapFragment extends Fragment {
     private MyLocationNewOverlay locationOverlay;
     private LocationTracking liveLocation;
     private LocationManager locationManager;
-    private GeoPoint currentLocation = new GeoPoint(12.70000, 122.70000);;
+    private GeoPoint currentLocation;
     private DatabaseHelper databaseHelper;
     private double currentZoom = 7.5;
 
@@ -106,20 +106,19 @@ public class MapFragment extends Fragment {
         mapOperation.setMapCompass();
         mapOperation.enableMapControls();
 
+        try { databaseHelper.copyDatabaseFromAssets(); }
+        catch (IOException e) { }
+
+        currentLocation = databaseHelper.getLastLocation();
         locateGpsBtnOnClick(context);
-        try {
-            setMapOverlays();
-        } catch (IOException e) {
-        }
+        mapOperation.setCustomMapOverlays(databaseHelper.getMapMarkers());
 
-        // FloatingActionButtons OnClickListeners
         FloatingActionButton locateGpsBtn = rootView.findViewById(R.id.locateGpsBtn);
-        locateGpsBtn.setOnClickListener(view -> locateGpsBtnOnClick(context));
-
         FloatingActionButton zoomOutBtn = rootView.findViewById(R.id.zoomOutBtn);
-        zoomOutBtn.setOnClickListener(view -> zoomOutBtnOnClick());
-
         FloatingActionButton zoomInBtn = rootView.findViewById(R.id.zoomInBtn);
+
+        locateGpsBtn.setOnClickListener(view -> locateGpsBtnOnClick(context));
+        zoomOutBtn.setOnClickListener(view -> zoomOutBtnOnClick());
         zoomInBtn.setOnClickListener(view -> zoomInBtnOnClick());
 
         return rootView;
@@ -129,6 +128,7 @@ public class MapFragment extends Fragment {
     public void onResume() {
         super.onResume();
         mapView.onResume();
+        locateGpsBtnOnClick(getActivity());
     }
 
     @Override
@@ -146,7 +146,9 @@ public class MapFragment extends Fragment {
                     liveLocation = new LocationTracking(context);
                     liveLocation.requestLocationUpdates();
                     liveLocation.getBestLocation();
+
                     currentLocation = new GeoPoint(liveLocation.currentLocation.getLatitude(), liveLocation.currentLocation.getLongitude());
+                    databaseHelper.setLastLocation(currentLocation);
                     currentZoom = 18.0;
                 } catch (Exception e) {
                 }
@@ -155,6 +157,7 @@ public class MapFragment extends Fragment {
 
         if (currentLocation != null) {
             IMapController mapController = mapView.getController();
+            currentZoom = 18.0;
             mapController.animateTo(currentLocation, currentZoom, 500L);
             mapOperation.setCurrentLocationOverlay();
             currentLocation = null;
@@ -165,17 +168,12 @@ public class MapFragment extends Fragment {
     }
 
     public void zoomInBtnOnClick() {
-        mapView.getController().zoomIn();
+        mapView.getController().zoomIn(300L);
         currentZoom = mapView.getZoomLevelDouble();
     }
 
     public void zoomOutBtnOnClick() {
-        mapView.getController().zoomOut();
+        mapView.getController().zoomOut(300L);
         currentZoom = mapView.getZoomLevelDouble();
-    }
-
-    private void setMapOverlays() throws IOException {
-        databaseHelper.copyDatabaseFromAssets();
-        mapOperation.setCustomMapOverlays(databaseHelper.getMapMarkers());
     }
 }
