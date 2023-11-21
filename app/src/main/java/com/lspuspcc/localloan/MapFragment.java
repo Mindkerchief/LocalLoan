@@ -44,6 +44,8 @@ public class MapFragment extends Fragment {
     private String mParam1;
     private String mParam2;
 
+    private ComputeSavingsFragment computeSavingsFragment;
+    private ComputeLoanFragment computeLoanFragment;
     private MapView mapView;
     private MapOperation mapOperation;
     private MyLocationNewOverlay locationOverlay;
@@ -89,12 +91,18 @@ public class MapFragment extends Fragment {
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_map, container, false);
         Context context = getActivity();
+
         mapView = rootView.findViewById(R.id.osmMap);
         locationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
         databaseHelper = new DatabaseHelper(context);
-        Configuration.getInstance().load(context, PreferenceManager.getDefaultSharedPreferences(context));
 
-        mapOperation = new MapOperation(context, mapView);
+        Configuration.getInstance().load(context, PreferenceManager.getDefaultSharedPreferences(context));
+        MainActivity mainActivity = (MainActivity) context;
+
+        computeSavingsFragment = mainActivity.getComputeSavingFragment();
+        computeLoanFragment = mainActivity.getComputeLoanFragment();
+
+        mapOperation = new MapOperation(context, mapView, computeSavingsFragment, computeLoanFragment);
         mapView.setTileSource(TileSourceFactory.MAPNIK);
         mapOperation.setMapCompass();
         mapOperation.enableMapControls();

@@ -1,5 +1,6 @@
 package com.lspuspcc.localloan;
 
+import android.content.Context;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -10,8 +11,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -28,6 +31,11 @@ public class MarkerViewFragment extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
+    private Context context;
+    private MainActivity mainActivity;
+
+    public ComputeSavingsFragment computeSavingsFragment;
+    public ComputeLoanFragment computeLoanFragment;
 
     public TextView establishmentNameText;
     public TextView establishmentBusinessTimeText;
@@ -35,8 +43,12 @@ public class MarkerViewFragment extends Fragment {
     public TextView loanDetailsText;
     public Button savingsRedirectBtn;
     public Button loanRedirectBtn;
+    private ImageButton markerDetailsCloseBtn;
 
-    private ImageButton markerDeatilsCloseBtn;
+    public String savingsInterestRate;
+    public String savingsMinimumDeposit;
+    public String loanAddOnRate;
+    public String loanMinimumAmount;
 
     public MarkerViewFragment() {
         // Required empty public constructor
@@ -73,15 +85,20 @@ public class MarkerViewFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_marker_view, container, false);
+        context = getActivity();
+        mainActivity = (MainActivity) context;
+
         establishmentNameText = rootView.findViewById(R.id.establishmentNameText);
         establishmentBusinessTimeText = rootView.findViewById(R.id.establishmentBusinessTimeText);
         savingDetailsText = rootView.findViewById(R.id.savingDetailsText);
         loanDetailsText = rootView.findViewById(R.id.loanDetailsText);
         savingsRedirectBtn = rootView.findViewById(R.id.savingsRedirectBtn);
         loanRedirectBtn = rootView.findViewById(R.id.loanRedirectBtn);
-        markerDeatilsCloseBtn = rootView.findViewById(R.id.markerDeatilsCloseBtn);
+        markerDetailsCloseBtn = rootView.findViewById(R.id.markerDeatilsCloseBtn);
 
-        markerDeatilsCloseBtn.setOnClickListener(view -> markerDetailsCloseBtnOnClick());
+        savingsRedirectBtn.setOnClickListener(view -> savingsRedirectBtnOnClick());
+        loanRedirectBtn.setOnClickListener(view -> loanRedirectBtnOnClick());
+        markerDetailsCloseBtn.setOnClickListener(view -> markerDetailsCloseBtnOnClick());
         return rootView;
     }
 
@@ -92,7 +109,25 @@ public class MarkerViewFragment extends Fragment {
         transaction.commit();
     }
 
-    public void displayMarkerInfor() {
+    private void savingsRedirectBtnOnClick() {
+        //mainActivity.hideFragment(mainActivity.mapFragment);
+        mainActivity.replaceFragment(mainActivity.computeFragment);
+        //mainActivity.showFragment(mainActivity.computeFragment);
+        mainActivity.computeFragment.replaceFragment(computeSavingsFragment);
 
+        computeSavingsFragment.textPrincipal = savingsMinimumDeposit;
+        computeSavingsFragment.textAnnualInterestRate = savingsInterestRate;
+        markerDetailsCloseBtnOnClick();
+    }
+
+    private void loanRedirectBtnOnClick() {
+        //mainActivity.hideFragment(mainActivity.mapFragment);
+        mainActivity.replaceFragment(mainActivity.computeFragment);
+        //mainActivity.showFragment(mainActivity.computeFragment);
+        mainActivity.computeFragment.replaceFragment(computeLoanFragment);
+
+        computeLoanFragment.textLoanAmount = loanMinimumAmount;
+        computeLoanFragment.textInterestRate = loanAddOnRate;
+        markerDetailsCloseBtnOnClick();
     }
 }

@@ -14,10 +14,12 @@ import com.google.android.material.navigation.NavigationBarView;
 public class MainActivity extends AppCompatActivity {
 
     private BottomNavigationView bottomNavigation;
-    private MapFragment mapFragment;
-    private ComputeFragment computeFragment;
+    public MapFragment mapFragment;
+    public ComputeFragment computeFragment;
     private TrackerFragment trackerFragment;
     private SettingFragment settingFragment;
+    public ComputeSavingsFragment computeSavingsFragment;
+    public ComputeLoanFragment computeLoanFragment;
 
     private FragmentTransaction fragmentTransaction;
 
@@ -32,7 +34,11 @@ public class MainActivity extends AppCompatActivity {
         computeFragment = new ComputeFragment();
         trackerFragment = new TrackerFragment();
         settingFragment = new SettingFragment();
+        computeSavingsFragment = new ComputeSavingsFragment();
+        computeLoanFragment = new ComputeLoanFragment();
 
+        replaceFragment(computeFragment);
+        //hideFragment(computeFragment);
         replaceFragment(mapFragment);
 
         bottomNavigation = findViewById(R.id.bottomNavigationMenu);
@@ -52,7 +58,7 @@ public class MainActivity extends AppCompatActivity {
         requestPermission.isInternetPermissionsGranted(this);
     }
 
-    private boolean bottomNavigationBtnOnClick(MenuItem item) {
+    public boolean bottomNavigationBtnOnClick(MenuItem item) {
         int menuItemId = item.getItemId();
 
         if (menuItemId == R.id.map) {
@@ -121,5 +127,13 @@ public class MainActivity extends AppCompatActivity {
         fragmentTransaction = getSupportFragmentManager().beginTransaction();
         fragmentTransaction.show(fragment);
         fragmentTransaction.commit();
+    }
+
+    public ComputeSavingsFragment getComputeSavingFragment() {
+        return computeSavingsFragment;
+    }
+
+    public ComputeLoanFragment getComputeLoanFragment() {
+        return computeLoanFragment;
     }
 }
