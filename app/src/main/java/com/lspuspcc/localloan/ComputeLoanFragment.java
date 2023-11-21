@@ -39,6 +39,11 @@ public class ComputeLoanFragment extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
+    public EditText editTextLoanAmount;
+    public EditText editTextInterestRate;
+
+    public String textLoanAmount;
+    public String textInterestRate;
 
     public ComputeLoanFragment() {
         // Required empty public constructor
@@ -76,10 +81,10 @@ public class ComputeLoanFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_compute_loan, container, false);
 
-        EditText editTextLoanAmount = view.findViewById(R.id.editTextLoanAmount);
+        editTextLoanAmount = view.findViewById(R.id.editTextLoanAmount);
             editTextLoanAmount = view.findViewById(R.id.editTextLoanAmount);
             restrictDecimalPlaces(editTextLoanAmount, 2);
-        EditText editTextInterestRate = view.findViewById(R.id.editTextInterestRate);
+        editTextInterestRate = view.findViewById(R.id.editTextInterestRate);
         EditText editTextTerm = view.findViewById(R.id.editTextTerm);
             editTextTerm.setInputType(InputType.TYPE_CLASS_NUMBER);
         Button buttonComputeLoan = view.findViewById(R.id.btnComputeLoan);
@@ -88,12 +93,23 @@ public class ComputeLoanFragment extends Fragment {
         View rootView = view.findViewById(R.id.frameLayout2);
         HorizontalScrollView horizontalScrollView = view.findViewById(R.id.horizontalScrollViewLoan);
         EditText finalEditTextLoanAmount = editTextLoanAmount;
+
+        if (textLoanAmount != null) {
+            editTextLoanAmount.setText(textLoanAmount);
+            textLoanAmount = null;
+        }
+
+        if (textInterestRate != null) {
+            editTextInterestRate.setText(textInterestRate);
+            textInterestRate = null;
+        }
+
         buttonComputeLoan.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 clearFocus(v, finalEditTextLoanAmount, editTextInterestRate, editTextTerm);
 
-                String loanAmountStr = finalEditTextLoanAmount.getText().toString();
+                String loanAmountStr = editTextLoanAmount.getText().toString();
                 String interestRateStr = editTextInterestRate.getText().toString();
                 String termMonthsStr = editTextTerm.getText().toString();
                 try {

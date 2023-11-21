@@ -17,14 +17,21 @@ public class MapOperation {
     private MapView mapView;
     private MarkerViewFragment markerView;
     private MapObjectWrapper mapObjectWrapper;
-    public MapOperation(Context context, MapView mapView) {
+    private ComputeSavingsFragment computeSavingsFragment;
+    private ComputeLoanFragment computeLoanFragment;
+    public MapOperation(Context context, MapView mapView, ComputeSavingsFragment computeSavingsFragment, ComputeLoanFragment computeLoanFragment) {
         this.context = context;
         this.mapView = mapView;
         this.markerView = new MarkerViewFragment();
+        this.computeSavingsFragment = computeSavingsFragment;
+        this.computeLoanFragment = computeLoanFragment;
+
+        markerView.computeSavingsFragment = computeSavingsFragment;
+        markerView.computeLoanFragment = computeLoanFragment;
+
         MainActivity mainActivity = (MainActivity) context;
         mainActivity.addFragment(markerView);
         mainActivity.hideFragment(markerView);
-
     }
     public void setMapCompass() {
         CompassOverlay compassOverlay = new CompassOverlay(context, new InternalCompassOrientationProvider(context), mapView);
@@ -68,6 +75,11 @@ public class MapOperation {
                         markerView.loanDetailsText.setText("Minimum loan amount of " + markerInfoWrapper.minimumLoanAmount);
                         markerView.savingsRedirectBtn.setText("Save for " + markerInfoWrapper.savingsInterestRate);
                         markerView.loanRedirectBtn.setText("Loan for " + markerInfoWrapper.monthlyAddonInterestRate);
+
+                        markerView.savingsMinimumDeposit = Integer.toString(markerInfoWrapper.minimumInitialDeposit);
+                        markerView.savingsInterestRate = Float.toString(markerInfoWrapper.savingsInterestRate);
+                        markerView.loanMinimumAmount = Integer.toString(markerInfoWrapper.minimumLoanAmount);
+                        markerView.loanAddOnRate = Float.toString(markerInfoWrapper.monthlyAddonInterestRate);
 
                         return true;
                     }

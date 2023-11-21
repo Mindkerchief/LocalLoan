@@ -36,6 +36,11 @@ public class ComputeSavingsFragment extends Fragment {
     private String mParam1;
     private String mParam2;
 
+    public EditText editTextPrincipal;
+    public EditText editTextAnnualInterestRate;
+    public String textPrincipal;
+    public String textAnnualInterestRate;
+
     public ComputeSavingsFragment() {
         // Required empty public constructor
     }
@@ -72,10 +77,10 @@ public class ComputeSavingsFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_compute_savings, container, false);
 
-        EditText editTextPrincipal = view.findViewById(R.id.editTextPrincipal);
+        editTextPrincipal = view.findViewById(R.id.editTextPrincipal);
             editTextPrincipal = view.findViewById(R.id.editTextPrincipal);
             restrictDecimalPlaces(editTextPrincipal, 2);
-        EditText editTextAnnualInterestRate = view.findViewById(R.id.editTextAnnualInterestRate);
+        editTextAnnualInterestRate = view.findViewById(R.id.editTextAnnualInterestRate);
         EditText editTextTerm = view.findViewById(R.id.editTextTerm);
             editTextTerm.setInputType(InputType.TYPE_CLASS_NUMBER);
         EditText editTextMonthlyContribution = view.findViewById(R.id.editTextMonthlyContribution);
@@ -88,6 +93,16 @@ public class ComputeSavingsFragment extends Fragment {
         HorizontalScrollView horizontalScrollView = view.findViewById(R.id.horizontalScrollViewSavings);
         EditText finalEditTextPrincipal = editTextPrincipal;
         EditText finalEditTextMonthlyContribution = editTextMonthlyContribution;
+
+        if (textPrincipal != null) {
+            finalEditTextPrincipal.setText(textPrincipal);
+            textPrincipal = null;
+        }
+
+        if (textAnnualInterestRate != null) {
+            editTextAnnualInterestRate.setText(textAnnualInterestRate);
+            textAnnualInterestRate = null;
+        }
         buttonComputeSavings.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -239,5 +254,18 @@ public class ComputeSavingsFragment extends Fragment {
         editTextAnnualInterestRate.clearFocus();
         editTextTerm.clearFocus();
         editTextMonthlyContribution.clearFocus();
+    }
+
+    public EditText getEditTextPrincipal() {
+        return editTextPrincipal;
+    }
+
+    public EditText getEditTextAnnualInterestRate() {
+        return  editTextAnnualInterestRate;
+    }
+
+    public void setText(String amount, String rate) {
+        editTextPrincipal.setText(amount);
+        editTextAnnualInterestRate.setText(rate);
     }
 }

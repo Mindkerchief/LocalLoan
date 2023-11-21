@@ -14,10 +14,12 @@ import com.google.android.material.navigation.NavigationBarView;
 public class MainActivity extends AppCompatActivity {
 
     private BottomNavigationView bottomNavigation;
-    private MapFragment mapFragment;
-    private ComputeFragment computeFragment;
+    public MapFragment mapFragment;
+    public ComputeFragment computeFragment;
     private TrackerFragment trackerFragment;
     private SettingFragment settingFragment;
+    public ComputeSavingsFragment computeSavingsFragment;
+    public ComputeLoanFragment computeLoanFragment;
 
     private FragmentTransaction fragmentTransaction;
 
@@ -32,6 +34,8 @@ public class MainActivity extends AppCompatActivity {
         computeFragment = new ComputeFragment();
         trackerFragment = new TrackerFragment();
         settingFragment = new SettingFragment();
+        computeSavingsFragment = new ComputeSavingsFragment();
+        computeLoanFragment = new ComputeLoanFragment();
 
         replaceFragment(mapFragment);
 
@@ -52,45 +56,29 @@ public class MainActivity extends AppCompatActivity {
         requestPermission.isInternetPermissionsGranted(this);
     }
 
-    private boolean bottomNavigationBtnOnClick(MenuItem item) {
+    public boolean bottomNavigationBtnOnClick(MenuItem item) {
         int menuItemId = item.getItemId();
 
         if (menuItemId == R.id.map) {
             if (!mapFragment.isVisible()) {
-                hideFragment(computeFragment);
-                hideFragment(trackerFragment);
-                hideFragment(settingFragment);
                 replaceFragment(mapFragment);
-                showFragment(mapFragment);
             }
         }
         else if (menuItemId == R.id.compute) {
             if (!computeFragment.isVisible()) {
-                hideFragment(mapFragment);
-                hideFragment(trackerFragment);
-                hideFragment(settingFragment);
-                addFragment(computeFragment);
-                showFragment(computeFragment);
+                replaceFragment(computeFragment);
             }
             return true;
         }
         else if (menuItemId == R.id.tracker) {
-            if (trackerFragment.isVisible()) {
-                hideFragment(mapFragment);
-                hideFragment(computeFragment);
-                hideFragment(settingFragment);
-                addFragment(trackerFragment);
-                showFragment(trackerFragment);
+            if (!trackerFragment.isVisible()) {
+                replaceFragment(trackerFragment);
             }
             return true;
         }
         else if (menuItemId == R.id.setting) {
-            if (settingFragment.isVisible()) {
-                hideFragment(mapFragment);
-                hideFragment(computeFragment);
-                hideFragment(trackerFragment);
-                addFragment(settingFragment);
-                showFragment(settingFragment);
+            if (!settingFragment.isVisible()) {
+                replaceFragment(settingFragment);
             }
             return true;
         }
@@ -121,5 +109,13 @@ public class MainActivity extends AppCompatActivity {
         fragmentTransaction = getSupportFragmentManager().beginTransaction();
         fragmentTransaction.show(fragment);
         fragmentTransaction.commit();
+    }
+
+    public ComputeSavingsFragment getComputeSavingFragment() {
+        return computeSavingsFragment;
+    }
+
+    public ComputeLoanFragment getComputeLoanFragment() {
+        return computeLoanFragment;
     }
 }

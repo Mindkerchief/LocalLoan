@@ -13,25 +13,29 @@
     <!-- TODO: Update blank fragment layout -->
 
     <Button
-        android:id="@+id/buttonSavings"
-        android:layout_width="0dp"
-        android:layout_height="80dp"
-        android:layout_weight="1"
-        android:background="@drawable/baseline_rectangle_24"
-        android:text="SAVINGS"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/buttonLoan"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <Button
         android:id="@+id/buttonLoan"
         android:layout_width="0dp"
         android:layout_height="80dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="5dp"
         android:layout_weight="1"
-        android:background="@drawable/baseline_rectangle_24"
         android:text="LOAN"
+        app:cornerRadius="0dp"
         app:layout_constraintEnd_toStartOf="@+id/buttonSavings"
         app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/buttonSavings"
+        android:layout_width="0dp"
+        android:layout_height="80dp"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="10dp"
+        android:layout_weight="1"
+        android:text="SAVINGS"
+        app:cornerRadius="0dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/buttonLoan"
         app:layout_constraintTop_toTopOf="parent" />
 
     <FrameLayout

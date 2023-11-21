@@ -1,8 +1,10 @@
 package com.lspuspcc.localloan;
 
+import android.content.Context;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -24,11 +26,17 @@ public class ComputeFragment extends Fragment {
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
 
-    String clicked = "SAVINGS";
+    public String clicked = "SAVINGS";
 
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
+
+    public ComputeSavingsFragment computeSavingsFragment;
+    public ComputeLoanFragment computeLoanFragment;
+
+    private FragmentTransaction fragmentTransaction;
+
 
     public ComputeFragment() {
         // Required empty public constructor
@@ -66,14 +74,24 @@ public class ComputeFragment extends Fragment {
                              Bundle savedInstanceState) {
 
         View view = inflater.inflate(R.layout.fragment_compute, container, false);
+        Context context = getContext();
+        MainActivity mainActivity = (MainActivity) context;
+        fragmentTransaction = getChildFragmentManager().beginTransaction();
 
-        if (savedInstanceState == null) {
-            if (clicked == "SAVINGS") {
-                getChildFragmentManager().beginTransaction()
-                        .replace(R.id.fragment_container, new ComputeLoanFragment())
-                        .commit();
-                clicked = "LOAN";
-            }
+        computeSavingsFragment = mainActivity.computeSavingsFragment;
+        computeLoanFragment = mainActivity.computeLoanFragment;
+
+        if (clicked == "SAVINGS") {
+            getChildFragmentManager().beginTransaction()
+                    .replace(R.id.fragment_container, computeLoanFragment)
+                    .commit();
+            clicked = "LOAN";
+        }
+        else if (clicked == "LOAN") {
+            getChildFragmentManager().beginTransaction()
+                    .replace(R.id.fragment_container, computeSavingsFragment)
+                    .commit();
+            clicked = "SAVINGS";
         }
 
         view.findViewById(R.id.buttonLoan).setOnClickListener(new View.OnClickListener() {
@@ -81,7 +99,7 @@ public class ComputeFragment extends Fragment {
             public void onClick(View v) {
                 if (clicked == "SAVINGS") {
                     getChildFragmentManager().beginTransaction()
-                            .replace(R.id.fragment_container, new ComputeLoanFragment())
+                            .replace(R.id.fragment_container, computeLoanFragment)
                             .commit();
                     clicked = "LOAN";
                 }
@@ -93,7 +111,7 @@ public class ComputeFragment extends Fragment {
             public void onClick(View v) {
                 if (clicked == "LOAN") {
                     getChildFragmentManager().beginTransaction()
-                            .replace(R.id.fragment_container, new ComputeSavingsFragment())
+                            .replace(R.id.fragment_container, computeSavingsFragment)
                             .commit();
                     clicked = "SAVINGS";
                 }
@@ -101,5 +119,29 @@ public class ComputeFragment extends Fragment {
         });
 
         return view;
+    }
+
+    public void replaceFragment(Fragment fragment) {
+        fragmentTransaction = getChildFragmentManager().beginTransaction();
+        fragmentTransaction.replace(R.id.fragment_container, fragment)
+                .commit();
+    }
+
+    public void addFragment(Fragment fragment) {
+        fragmentTransaction = getChildFragmentManager().beginTransaction();
+        fragmentTransaction.add(R.id.fragment_container, fragment)
+                .commit();
+    }
+
+    public void hideFragment(Fragment fragment) {
+        fragmentTransaction = getChildFragmentManager().beginTransaction();
+        fragmentTransaction.hide(fragment);
+        fragmentTransaction.commit();
+    }
+
+    public void showFragment(Fragment fragment) {
+        fragmentTransaction = getChildFragmentManager().beginTransaction();
+        fragmentTransaction.show(fragment);
+        fragmentTransaction.commit();
     }
 }
