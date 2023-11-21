@@ -17,7 +17,6 @@ public class MainActivity extends AppCompatActivity {
     public MapFragment mapFragment;
     public ComputeFragment computeFragment;
     private TrackerFragment trackerFragment;
-    private SettingFragment settingFragment;
     public ComputeSavingsFragment computeSavingsFragment;
     public ComputeLoanFragment computeLoanFragment;
 
@@ -33,7 +32,6 @@ public class MainActivity extends AppCompatActivity {
         mapFragment = new MapFragment();
         computeFragment = new ComputeFragment();
         trackerFragment = new TrackerFragment();
-        settingFragment = new SettingFragment();
         computeSavingsFragment = new ComputeSavingsFragment();
         computeLoanFragment = new ComputeLoanFragment();
 
@@ -52,7 +50,6 @@ public class MainActivity extends AppCompatActivity {
     private void checkPermissions() {
         PermissionRequest permissionRequest = new PermissionRequest(getApplicationContext());
         permissionRequest.requestLocationPermissions(this);
-        //permissionRequest.requestStoragePermissions(this);
         permissionRequest.requestInternetPermissions(this);
     }
 
@@ -76,35 +73,26 @@ public class MainActivity extends AppCompatActivity {
             }
             return true;
         }
-        else if (menuItemId == R.id.setting) {
-            if (!settingFragment.isVisible()) {
-                replaceFragment(settingFragment);
-            }
-            return true;
-        }
         return false;
     }
 
     public void replaceFragment(Fragment fragment) {
         fragmentTransaction = getSupportFragmentManager().beginTransaction();
         fragmentTransaction.replace(R.id.mainFrame, fragment);
-        fragmentTransaction.setTransition(fragmentTransaction.TRANSIT_FRAGMENT_OPEN)
-            .addToBackStack(null)
-            .commit();
+        fragmentTransaction.commit();
     }
 
     public void addFragment(Fragment fragment) {
         fragmentTransaction = getSupportFragmentManager().beginTransaction();
         fragmentTransaction.add(R.id.mainFrame, fragment);
-        fragmentTransaction.setTransition(fragmentTransaction.TRANSIT_FRAGMENT_OPEN)
-                .addToBackStack(null)
-                .commit();
+        fragmentTransaction.setTransition(fragmentTransaction.TRANSIT_FRAGMENT_OPEN);
+        fragmentTransaction.commit();
     }
 
     public void hideFragment(Fragment fragment) {
         fragmentTransaction = getSupportFragmentManager().beginTransaction();
-        fragmentTransaction.setTransition(fragmentTransaction.TRANSIT_FRAGMENT_CLOSE);
         fragmentTransaction.hide(fragment);
+        fragmentTransaction.setTransition(fragmentTransaction.TRANSIT_FRAGMENT_CLOSE);
         fragmentTransaction.commit();
     }
 

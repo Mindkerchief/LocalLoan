@@ -4,8 +4,6 @@ import android.content.Context;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
 
 import android.text.Editable;
 import android.text.InputType;
@@ -21,8 +19,6 @@ import android.widget.HorizontalScrollView;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
-
-import java.util.List;
 
 /**
  * A simple {@link Fragment} subclass.
