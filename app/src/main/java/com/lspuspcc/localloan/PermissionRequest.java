@@ -17,7 +17,6 @@ public class PermissionRequest {
         this.context = context;
     }
 
-    // For future use
     public void requestStoragePermissions(MainActivity mainActivity) {
         String[] storagePermissions = new String[] {
             android.Manifest.permission.READ_EXTERNAL_STORAGE,

@@ -9,6 +9,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.overlay.OverlayItem;
 
+import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -35,9 +36,11 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
 
     public void copyDatabaseFromAssets() throws IOException {
-        if (context.getDatabasePath(DATABASE_NAME).getAbsolutePath().isEmpty()) {
+        String outFileName = context.getDatabasePath(DATABASE_NAME).getAbsolutePath();
+        File file = new File(outFileName);
+
+        if (!file.exists()) {
             InputStream myInput = context.getAssets().open(DATABASE_NAME);
-            String outFileName = context.getDatabasePath(DATABASE_NAME).getAbsolutePath();
             OutputStream myOutput = new FileOutputStream(outFileName);
 
             byte[] buffer = new byte[1024];

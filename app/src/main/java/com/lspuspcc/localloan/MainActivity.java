@@ -52,6 +52,7 @@ public class MainActivity extends AppCompatActivity {
     private void checkPermissions() {
         PermissionRequest permissionRequest = new PermissionRequest(getApplicationContext());
         permissionRequest.requestLocationPermissions(this);
+        //permissionRequest.requestStoragePermissions(this);
         permissionRequest.requestInternetPermissions(this);
     }
 
