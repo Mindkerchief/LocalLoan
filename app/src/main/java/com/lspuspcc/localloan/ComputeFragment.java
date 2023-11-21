@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 
+import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.textfield.TextInputEditText;
 
 /**
@@ -74,6 +75,7 @@ public class ComputeFragment extends Fragment {
                              Bundle savedInstanceState) {
 
         View view = inflater.inflate(R.layout.fragment_compute, container, false);
+        TabLayout tabLayout = view.findViewById(R.id.tabLayout2);
         Context context = getContext();
         MainActivity mainActivity = (MainActivity) context;
         fragmentTransaction = getChildFragmentManager().beginTransaction();
@@ -94,27 +96,38 @@ public class ComputeFragment extends Fragment {
             clicked = "SAVINGS";
         }
 
-        view.findViewById(R.id.buttonLoan).setOnClickListener(new View.OnClickListener() {
+        tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
-            public void onClick(View v) {
-                if (clicked == "SAVINGS") {
-                    getChildFragmentManager().beginTransaction()
-                            .replace(R.id.fragment_container, computeLoanFragment)
-                            .commit();
-                    clicked = "LOAN";
+            public void onTabSelected(TabLayout.Tab tab) {
+                int position = tab.getPosition();
+                switch (position) {
+                    case 0:
+                        if (clicked == "SAVINGS") {
+                            getChildFragmentManager().beginTransaction()
+                                    .replace(R.id.fragment_container, computeLoanFragment)
+                                    .commit();
+                            clicked = "LOAN";
+                        }
+                        break;
+                    case 1:
+                        if (clicked == "LOAN") {
+                        getChildFragmentManager().beginTransaction()
+                                .replace(R.id.fragment_container, computeSavingsFragment)
+                                .commit();
+                        clicked = "SAVINGS";
+                        }
+                        break;
                 }
             }
-        });
 
-        view.findViewById(R.id.buttonSavings).setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
-                if (clicked == "LOAN") {
-                    getChildFragmentManager().beginTransaction()
-                            .replace(R.id.fragment_container, computeSavingsFragment)
-                            .commit();
-                    clicked = "SAVINGS";
-                }
+            public void onTabUnselected(TabLayout.Tab tab) {
+
+            }
+
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {
+
             }
         });
 
