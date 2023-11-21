@@ -76,12 +76,13 @@ public class ComputeFragment extends Fragment {
 
         View view = inflater.inflate(R.layout.fragment_compute, container, false);
         TabLayout tabLayout = view.findViewById(R.id.tabLayout2);
+        TabLayout.Tab savingsTab = tabLayout.getTabAt(1);
         Context context = getContext();
         MainActivity mainActivity = (MainActivity) context;
         fragmentTransaction = getChildFragmentManager().beginTransaction();
 
-        computeSavingsFragment = mainActivity.computeSavingsFragment;
-        computeLoanFragment = mainActivity.computeLoanFragment;
+        computeSavingsFragment = new ComputeSavingsFragment();
+        computeLoanFragment = new ComputeLoanFragment();
 
         if (savedInstanceState == null) {
             if (clicked == "SAVINGS") {
@@ -89,6 +90,7 @@ public class ComputeFragment extends Fragment {
             }
             else if (clicked == "LOANS") {
                 openSavingsTab();
+                savingsTab.select();
             }
         }
 

@@ -42,8 +42,8 @@ public class ComputeLoanFragment extends Fragment {
     public EditText editTextLoanAmount;
     public EditText editTextInterestRate;
 
-    public String textLoanAmount;
-    public String textInterestRate;
+    public static String textLoanAmount;
+    public static String textInterestRate;
 
     public ComputeLoanFragment() {
         // Required empty public constructor
@@ -97,7 +97,6 @@ public class ComputeLoanFragment extends Fragment {
             editTextLoanAmount.setText(textLoanAmount);
             textLoanAmount = null;
         }
-
         if (textInterestRate != null) {
             editTextInterestRate.setText(textInterestRate);
             textInterestRate = null;
@@ -118,9 +117,9 @@ public class ComputeLoanFragment extends Fragment {
 
                     double monthlyInterestRate = interestRate / 12 / 100;
                     double monthlyPayment = (loanAmount * monthlyInterestRate) / (1 - Math.pow(1 + monthlyInterestRate, -loanTermMonths));
+                    double totalPayment = monthlyPayment * loanTermMonths;
                     monthlyPayment = Math.round(monthlyPayment * 100);
                     monthlyPayment = monthlyPayment / 100;
-                    double totalPayment = monthlyPayment * loanTermMonths;
                     totalPayment = Math.round(totalPayment * 100);
                     totalPayment /= 100;
 
