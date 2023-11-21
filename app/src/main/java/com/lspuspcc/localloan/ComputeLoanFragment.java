@@ -82,7 +82,6 @@ public class ComputeLoanFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_compute_loan, container, false);
 
         editTextLoanAmount = view.findViewById(R.id.editTextLoanAmount);
-            editTextLoanAmount = view.findViewById(R.id.editTextLoanAmount);
             restrictDecimalPlaces(editTextLoanAmount, 2);
         editTextInterestRate = view.findViewById(R.id.editTextInterestRate);
         EditText editTextTerm = view.findViewById(R.id.editTextTerm);

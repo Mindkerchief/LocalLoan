@@ -110,8 +110,8 @@ public class MarkerViewFragment extends Fragment {
     }
 
     private void savingsRedirectBtnOnClick() {
-        mainActivity.computeFragment.clicked = "LOAN";
         mainActivity.replaceFragment(mainActivity.computeFragment);
+        mainActivity.computeFragment.clicked = "LOANS";
 
         computeSavingsFragment.textPrincipal = savingsMinimumDeposit;
         computeSavingsFragment.textAnnualInterestRate = savingsInterestRate;

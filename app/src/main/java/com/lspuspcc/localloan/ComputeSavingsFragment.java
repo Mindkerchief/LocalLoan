@@ -78,7 +78,6 @@ public class ComputeSavingsFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_compute_savings, container, false);
 
         editTextPrincipal = view.findViewById(R.id.editTextPrincipal);
-            editTextPrincipal = view.findViewById(R.id.editTextPrincipal);
             restrictDecimalPlaces(editTextPrincipal, 2);
         editTextAnnualInterestRate = view.findViewById(R.id.editTextAnnualInterestRate);
         EditText editTextTerm = view.findViewById(R.id.editTextTerm);

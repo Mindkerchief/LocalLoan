@@ -83,17 +83,13 @@ public class ComputeFragment extends Fragment {
         computeSavingsFragment = mainActivity.computeSavingsFragment;
         computeLoanFragment = mainActivity.computeLoanFragment;
 
-        if (clicked == "SAVINGS") {
-            getChildFragmentManager().beginTransaction()
-                    .replace(R.id.fragment_container, computeLoanFragment)
-                    .commit();
-            clicked = "LOAN";
-        }
-        else if (clicked == "LOAN") {
-            getChildFragmentManager().beginTransaction()
-                    .replace(R.id.fragment_container, computeSavingsFragment)
-                    .commit();
-            clicked = "SAVINGS";
+        if (savedInstanceState == null) {
+            if (clicked == "SAVINGS") {
+                openLoansTab();
+            }
+            else if (clicked == "LOANS") {
+                openSavingsTab();
+            }
         }
 
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
@@ -102,20 +98,10 @@ public class ComputeFragment extends Fragment {
                 int position = tab.getPosition();
                 switch (position) {
                     case 0:
-                        if (clicked == "SAVINGS") {
-                            getChildFragmentManager().beginTransaction()
-                                    .replace(R.id.fragment_container, computeLoanFragment)
-                                    .commit();
-                            clicked = "LOAN";
-                        }
+                        openLoansTab();
                         break;
                     case 1:
-                        if (clicked == "LOAN") {
-                        getChildFragmentManager().beginTransaction()
-                                .replace(R.id.fragment_container, computeSavingsFragment)
-                                .commit();
-                        clicked = "SAVINGS";
-                        }
+                        openSavingsTab();
                         break;
                 }
             }
@@ -134,27 +120,17 @@ public class ComputeFragment extends Fragment {
         return view;
     }
 
-    public void replaceFragment(Fragment fragment) {
-        fragmentTransaction = getChildFragmentManager().beginTransaction();
-        fragmentTransaction.replace(R.id.fragment_container, fragment)
+    private void openLoansTab() {
+        getChildFragmentManager().beginTransaction()
+                .replace(R.id.fragment_container, computeLoanFragment)
                 .commit();
+        clicked = "LOANS";
     }
 
-    public void addFragment(Fragment fragment) {
-        fragmentTransaction = getChildFragmentManager().beginTransaction();
-        fragmentTransaction.add(R.id.fragment_container, fragment)
+    private void openSavingsTab() {
+        getChildFragmentManager().beginTransaction()
+                .replace(R.id.fragment_container, computeSavingsFragment)
                 .commit();
-    }
-
-    public void hideFragment(Fragment fragment) {
-        fragmentTransaction = getChildFragmentManager().beginTransaction();
-        fragmentTransaction.hide(fragment);
-        fragmentTransaction.commit();
-    }
-
-    public void showFragment(Fragment fragment) {
-        fragmentTransaction = getChildFragmentManager().beginTransaction();
-        fragmentTransaction.show(fragment);
-        fragmentTransaction.commit();
+        clicked = "SAVINGS";
     }
 }
