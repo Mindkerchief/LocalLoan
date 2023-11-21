@@ -96,10 +96,12 @@ public class ComputeLoanFragment extends Fragment {
 
         if (textLoanAmount != null) {
             editTextLoanAmount.setText(textLoanAmount);
+            textLoanAmount = null;
         }
 
         if (textInterestRate != null) {
             editTextInterestRate.setText(textInterestRate);
+            textInterestRate = null;
         }
 
         buttonComputeLoan.setOnClickListener(new View.OnClickListener() {

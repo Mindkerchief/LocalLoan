@@ -37,6 +37,7 @@ public class ComputeFragment extends Fragment {
 
     private FragmentTransaction fragmentTransaction;
 
+
     public ComputeFragment() {
         // Required empty public constructor
     }
@@ -80,13 +81,17 @@ public class ComputeFragment extends Fragment {
         computeSavingsFragment = mainActivity.computeSavingsFragment;
         computeLoanFragment = mainActivity.computeLoanFragment;
 
-        if (savedInstanceState == null) {
-            if (clicked == "SAVINGS") {
-                getChildFragmentManager().beginTransaction()
-                        .replace(R.id.fragment_container, computeLoanFragment)
-                        .commit();
-                clicked = "LOAN";
-            }
+        if (clicked == "SAVINGS") {
+            getChildFragmentManager().beginTransaction()
+                    .replace(R.id.fragment_container, computeLoanFragment)
+                    .commit();
+            clicked = "LOAN";
+        }
+        else if (clicked == "LOAN") {
+            getChildFragmentManager().beginTransaction()
+                    .replace(R.id.fragment_container, computeSavingsFragment)
+                    .commit();
+            clicked = "SAVINGS";
         }
 
         view.findViewById(R.id.buttonLoan).setOnClickListener(new View.OnClickListener() {
@@ -119,7 +124,6 @@ public class ComputeFragment extends Fragment {
     public void replaceFragment(Fragment fragment) {
         fragmentTransaction = getChildFragmentManager().beginTransaction();
         fragmentTransaction.replace(R.id.fragment_container, fragment)
-                .addToBackStack(null)
                 .commit();
     }
 

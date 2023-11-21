@@ -96,10 +96,12 @@ public class ComputeSavingsFragment extends Fragment {
 
         if (textPrincipal != null) {
             finalEditTextPrincipal.setText(textPrincipal);
+            textPrincipal = null;
         }
 
         if (textAnnualInterestRate != null) {
             editTextAnnualInterestRate.setText(textAnnualInterestRate);
+            textAnnualInterestRate = null;
         }
         buttonComputeSavings.setOnClickListener(new View.OnClickListener() {
             @Override

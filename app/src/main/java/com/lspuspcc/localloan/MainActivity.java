@@ -37,8 +37,6 @@ public class MainActivity extends AppCompatActivity {
         computeSavingsFragment = new ComputeSavingsFragment();
         computeLoanFragment = new ComputeLoanFragment();
 
-        replaceFragment(computeFragment);
-        //hideFragment(computeFragment);
         replaceFragment(mapFragment);
 
         bottomNavigation = findViewById(R.id.bottomNavigationMenu);
@@ -63,40 +61,24 @@ public class MainActivity extends AppCompatActivity {
 
         if (menuItemId == R.id.map) {
             if (!mapFragment.isVisible()) {
-                hideFragment(computeFragment);
-                hideFragment(trackerFragment);
-                hideFragment(settingFragment);
                 replaceFragment(mapFragment);
-                showFragment(mapFragment);
             }
         }
         else if (menuItemId == R.id.compute) {
             if (!computeFragment.isVisible()) {
-                hideFragment(mapFragment);
-                hideFragment(trackerFragment);
-                hideFragment(settingFragment);
-                addFragment(computeFragment);
-                showFragment(computeFragment);
+                replaceFragment(computeFragment);
             }
             return true;
         }
         else if (menuItemId == R.id.tracker) {
-            if (trackerFragment.isVisible()) {
-                hideFragment(mapFragment);
-                hideFragment(computeFragment);
-                hideFragment(settingFragment);
-                addFragment(trackerFragment);
-                showFragment(trackerFragment);
+            if (!trackerFragment.isVisible()) {
+                replaceFragment(trackerFragment);
             }
             return true;
         }
         else if (menuItemId == R.id.setting) {
-            if (settingFragment.isVisible()) {
-                hideFragment(mapFragment);
-                hideFragment(computeFragment);
-                hideFragment(trackerFragment);
-                addFragment(settingFragment);
-                showFragment(settingFragment);
+            if (!settingFragment.isVisible()) {
+                replaceFragment(settingFragment);
             }
             return true;
         }
