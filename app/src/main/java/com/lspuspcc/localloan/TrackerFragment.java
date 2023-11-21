@@ -1,8 +1,10 @@
 package com.lspuspcc.localloan;
 
+import android.content.Context;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+
 import androidx.viewpager2.widget.ViewPager2;
 
 import android.view.LayoutInflater;
@@ -53,8 +55,40 @@ public class TrackerFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        View rootView = inflater.inflate(R.layout.fragment_tracker, container, false);
+        tabLayout = rootView.findViewById(R.id.tabLayout);
+        viewPager2 = rootView.findViewById(R.id.viewPager2);
+
+
+        trackerViewPagerAdapter = new TrackerViewPagerAdapter(requireActivity());
+        viewPager2.setAdapter(trackerViewPagerAdapter);
         // Inflate the layout for this fragment
 
-        return inflater.inflate(R.layout.fragment_tracker, container, false);
+        tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+            @Override
+            public void onTabSelected(TabLayout.Tab tab) {
+                viewPager2.setCurrentItem(tab.getPosition());
+            }
+
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {
+
+            }
+
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {
+
+            }
+        });
+        viewPager2.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
+            @Override
+            public void onPageSelected(int position) {
+                super.onPageSelected(position);
+                tabLayout.getTabAt(position).select();
+            }
+        });
+
+        return rootView;
+        //return inflater.inflate(R.layout.fragment_tracker, container, false);
     }
 }
