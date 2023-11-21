@@ -16,6 +16,7 @@ import android.widget.Toast;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
@@ -44,6 +45,8 @@ public class MapFragment extends Fragment {
     private String mParam1;
     private String mParam2;
 
+    private MainActivity mainActivity;
+
     private ComputeSavingsFragment computeSavingsFragment;
     private ComputeLoanFragment computeLoanFragment;
     private MapView mapView;
@@ -51,7 +54,7 @@ public class MapFragment extends Fragment {
     private MyLocationNewOverlay locationOverlay;
     private LocationTracking liveLocation;
     private LocationManager locationManager;
-    private GeoPoint currentlocation = new GeoPoint(12.70000, 122.70000);;
+    private GeoPoint currentLocation = new GeoPoint(12.70000, 122.70000);;
     private DatabaseHelper databaseHelper;
     private double currentZoom = 7.5;
 
@@ -97,7 +100,7 @@ public class MapFragment extends Fragment {
         databaseHelper = new DatabaseHelper(context);
 
         Configuration.getInstance().load(context, PreferenceManager.getDefaultSharedPreferences(context));
-        MainActivity mainActivity = (MainActivity) context;
+        mainActivity = (MainActivity) context;
 
         computeSavingsFragment = mainActivity.getComputeSavingFragment();
         computeLoanFragment = mainActivity.getComputeLoanFragment();
@@ -126,11 +129,13 @@ public class MapFragment extends Fragment {
         return rootView;
     }
 
+    @Override
     public void onResume() {
         super.onResume();
         mapView.onResume();
     }
 
+    @Override
     public void onPause() {
         super.onPause();
         mapView.onPause();
@@ -145,23 +150,21 @@ public class MapFragment extends Fragment {
                     liveLocation = new LocationTracking(context);
                     liveLocation.requestLocationUpdates();
                     liveLocation.getBestLocation();
-                    currentlocation = new GeoPoint(liveLocation.currentLocation.getLatitude(), liveLocation.currentLocation.getLongitude());
+                    currentLocation = new GeoPoint(liveLocation.currentLocation.getLatitude(), liveLocation.currentLocation.getLongitude());
                     currentZoom = 18.0;
                 } catch (Exception e) {
                 }
             }
         }
 
-        if (currentlocation != null) {
+        if (currentLocation != null) {
             IMapController mapController = mapView.getController();
-            mapController.animateTo(currentlocation, currentZoom, 500L);
+            mapController.animateTo(currentLocation, currentZoom, 500L);
             mapOperation.setCurrentLocationOverlay();
-            currentlocation = null;
+            currentLocation = null;
         }
         else {
-            Toast.makeText(context, "Location is unavailable", Toast.LENGTH_SHORT).show();
-            Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-            startActivity(intent);
+            mainActivity.addFragment(new LocationPromptFragment());
         }
     }
 
