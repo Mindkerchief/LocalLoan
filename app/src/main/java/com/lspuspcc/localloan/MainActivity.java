@@ -50,10 +50,9 @@ public class MainActivity extends AppCompatActivity {
         );
     }
     private void checkPermissions() {
-        PermissionRequest requestPermission = new PermissionRequest(getApplicationContext());
-        requestPermission.isLocationPermissionsGranted(this);
-        requestPermission.isStoragePermissionsGranted(this);
-        requestPermission.isInternetPermissionsGranted(this);
+        PermissionRequest permissionRequest = new PermissionRequest(getApplicationContext());
+        permissionRequest.requestLocationPermissions(this);
+        permissionRequest.requestInternetPermissions(this);
     }
 
     public boolean bottomNavigationBtnOnClick(MenuItem item) {
