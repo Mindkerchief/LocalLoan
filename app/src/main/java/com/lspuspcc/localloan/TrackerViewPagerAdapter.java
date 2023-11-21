@@ -14,9 +14,12 @@ public class TrackerViewPagerAdapter extends FragmentStateAdapter {
     @Override
     public Fragment createFragment(int position) {
         switch (position){
-            case 0: return new TrackerLoanFragment();
-            case 1: return new TrackerSavingsFragment();
-            default: return new TrackerLoanFragment();
+            case 0:
+                return new TrackerLoanFragment();
+            case 1:
+                return new TrackerSavingsFragment();
+            default:
+                    return new TrackerLoanFragment();
         }
     }
 
