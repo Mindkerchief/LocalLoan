@@ -1,14 +1,45 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     tools:context=".TrackerSavingsFragment">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <androidx.appcompat.widget.Toolbar
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/blue700"
+        android:minHeight="?actionBarSize"
+        android:theme="?actionBarTheme">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="Savings"
+            android:textSize="35sp"
+            android:textStyle="bold" />
+
+        <Button
+            android:id="@+id/newBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end"
+            android:text="+"
+            android:textSize="35sp"
+            android:textStyle="bold"
+            android:onClick="newLoan"/>
+
+
+    </androidx.appcompat.widget.Toolbar>
+
+    <ListView
+        android:id="@+id/loanListView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="Savings" />
+        android:layout_margin="3dp"
+        android:divider="@color/black"
+        android:dividerHeight="3dp"/>
 
-</FrameLayout>
+</LinearLayout>
