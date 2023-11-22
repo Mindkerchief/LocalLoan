@@ -23,12 +23,12 @@
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/locateGpsBtn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="45dp"
+            android:layout_height="45dp"
             android:layout_alignParentEnd="true"
             android:layout_alignParentBottom="true"
             android:layout_marginEnd="10dp"
-            android:layout_marginBottom="40dp"
+            android:layout_marginBottom="30dp"
             android:background="@color/grey200"
             android:clickable="true"
             android:contentDescription="locate your location"
@@ -36,8 +36,8 @@
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/zoomOutBtn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="45dp"
+            android:layout_height="45dp"
             android:layout_above="@+id/locateGpsBtn"
             android:layout_alignParentEnd="true"
             android:layout_marginEnd="10dp"
@@ -49,8 +49,8 @@
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/zoomInBtn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="45dp"
+            android:layout_height="45dp"
             android:layout_above="@+id/zoomOutBtn"
             android:layout_alignParentEnd="true"
             android:layout_marginEnd="10dp"
@@ -62,8 +62,8 @@
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/listNearbyBtn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="45dp"
+            android:layout_height="45dp"
             android:layout_alignParentStart="true"
             android:layout_alignParentTop="true"
             android:layout_marginStart="10dp"
@@ -71,7 +71,8 @@
             android:background="@color/grey200"
             android:clickable="true"
             android:contentDescription="list all nearby establishments"
-            android:foreground="@drawable/outline_view_list_24" />
+            android:foreground="@drawable/outline_view_list_24"
+            android:visibility="invisible" />
 
     </RelativeLayout>
 

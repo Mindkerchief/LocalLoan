@@ -2,16 +2,13 @@ package com.lspuspcc.localloan;
 
 import android.Manifest;
 import android.content.Context;
-import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.provider.Settings;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
@@ -44,6 +41,8 @@ public class MapFragment extends Fragment {
     private String mParam1;
     private String mParam2;
 
+    private MainActivity mainActivity;
+
     private ComputeSavingsFragment computeSavingsFragment;
     private ComputeLoanFragment computeLoanFragment;
     private MapView mapView;
@@ -51,7 +50,7 @@ public class MapFragment extends Fragment {
     private MyLocationNewOverlay locationOverlay;
     private LocationTracking liveLocation;
     private LocationManager locationManager;
-    private GeoPoint currentlocation = new GeoPoint(12.70000, 122.70000);;
+    private GeoPoint currentLocation;
     private DatabaseHelper databaseHelper;
     private double currentZoom = 7.5;
 
@@ -97,7 +96,7 @@ public class MapFragment extends Fragment {
         databaseHelper = new DatabaseHelper(context);
 
         Configuration.getInstance().load(context, PreferenceManager.getDefaultSharedPreferences(context));
-        MainActivity mainActivity = (MainActivity) context;
+        mainActivity = (MainActivity) context;
 
         computeSavingsFragment = mainActivity.getComputeSavingFragment();
         computeLoanFragment = mainActivity.getComputeLoanFragment();
@@ -107,30 +106,32 @@ public class MapFragment extends Fragment {
         mapOperation.setMapCompass();
         mapOperation.enableMapControls();
 
+        try { databaseHelper.copyDatabaseFromAssets(); }
+        catch (IOException e) { }
+
+        currentLocation = databaseHelper.getLastLocation();
         locateGpsBtnOnClick(context);
-        try {
-            setMapOverlays();
-        } catch (IOException e) {
-        }
+        mapOperation.setCustomMapOverlays(databaseHelper.getMapMarkers());
 
-        // FloatingActionButtons OnClickListeners
         FloatingActionButton locateGpsBtn = rootView.findViewById(R.id.locateGpsBtn);
-        locateGpsBtn.setOnClickListener(view -> locateGpsBtnOnClick(context));
-
         FloatingActionButton zoomOutBtn = rootView.findViewById(R.id.zoomOutBtn);
-        zoomOutBtn.setOnClickListener(view -> zoomOutBtnOnClick());
-
         FloatingActionButton zoomInBtn = rootView.findViewById(R.id.zoomInBtn);
+
+        locateGpsBtn.setOnClickListener(view -> locateGpsBtnOnClick(context));
+        zoomOutBtn.setOnClickListener(view -> zoomOutBtnOnClick());
         zoomInBtn.setOnClickListener(view -> zoomInBtnOnClick());
 
         return rootView;
     }
 
+    @Override
     public void onResume() {
         super.onResume();
         mapView.onResume();
+        locateGpsBtnOnClick(getActivity());
     }
 
+    @Override
     public void onPause() {
         super.onPause();
         mapView.onPause();
@@ -145,38 +146,34 @@ public class MapFragment extends Fragment {
                     liveLocation = new LocationTracking(context);
                     liveLocation.requestLocationUpdates();
                     liveLocation.getBestLocation();
-                    currentlocation = new GeoPoint(liveLocation.currentLocation.getLatitude(), liveLocation.currentLocation.getLongitude());
+
+                    currentLocation = new GeoPoint(liveLocation.currentLocation.getLatitude(), liveLocation.currentLocation.getLongitude());
+                    databaseHelper.setLastLocation(currentLocation);
                     currentZoom = 18.0;
                 } catch (Exception e) {
                 }
             }
         }
 
-        if (currentlocation != null) {
+        if (currentLocation != null) {
             IMapController mapController = mapView.getController();
-            mapController.animateTo(currentlocation, currentZoom, 500L);
+            currentZoom = 18.0;
+            mapController.animateTo(currentLocation, currentZoom, 500L);
             mapOperation.setCurrentLocationOverlay();
-            currentlocation = null;
+            currentLocation = null;
         }
         else {
-            Toast.makeText(context, "Location is unavailable", Toast.LENGTH_SHORT).show();
-            Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-            startActivity(intent);
+            mainActivity.addFragment(new LocationPromptFragment());
         }
     }
 
     public void zoomInBtnOnClick() {
-        mapView.getController().zoomIn();
+        mapView.getController().zoomIn(300L);
         currentZoom = mapView.getZoomLevelDouble();
     }
 
     public void zoomOutBtnOnClick() {
-        mapView.getController().zoomOut();
+        mapView.getController().zoomOut(300L);
         currentZoom = mapView.getZoomLevelDouble();
-    }
-
-    private void setMapOverlays() throws IOException {
-        databaseHelper.copyDatabaseFromAssets();
-        mapOperation.setCustomMapOverlays(databaseHelper.getMapMarkers());
     }
 }

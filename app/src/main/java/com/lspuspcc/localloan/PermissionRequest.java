@@ -17,7 +17,7 @@ public class PermissionRequest {
         this.context = context;
     }
 
-    public boolean isStoragePermissionsGranted(MainActivity mainActivity) {
+    public void requestStoragePermissions(MainActivity mainActivity) {
         String[] storagePermissions = new String[] {
             android.Manifest.permission.READ_EXTERNAL_STORAGE,
             android.Manifest.permission.WRITE_EXTERNAL_STORAGE
@@ -28,16 +28,9 @@ public class PermissionRequest {
         {
             ActivityCompat.requestPermissions(mainActivity, storagePermissions, STORAGE_PERMISSIONS);
         }
-
-        if (ContextCompat.checkSelfPermission(context, android.Manifest.permission.READ_EXTERNAL_STORAGE)  == PackageManager.PERMISSION_DENIED
-                && ActivityCompat.checkSelfPermission(context, android.Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_DENIED)
-        {
-            return false;
-        }
-        else return true;
     }
 
-    public boolean isInternetPermissionsGranted(MainActivity mainActivity) {
+    public void requestInternetPermissions(MainActivity mainActivity) {
         String[] internetPermissions = new String[] {
             android.Manifest.permission.INTERNET,
             android.Manifest.permission.ACCESS_NETWORK_STATE,
@@ -50,17 +43,9 @@ public class PermissionRequest {
         {
             ActivityCompat.requestPermissions(mainActivity, internetPermissions, INTERNET_PERMISSIONS);
         }
-
-        if (ContextCompat.checkSelfPermission(context, android.Manifest.permission.INTERNET) == PackageManager.PERMISSION_DENIED
-                && ActivityCompat.checkSelfPermission(context, android.Manifest.permission.ACCESS_NETWORK_STATE) == PackageManager.PERMISSION_DENIED
-                && ActivityCompat.checkSelfPermission(context, android.Manifest.permission.ACCESS_WIFI_STATE) == PackageManager.PERMISSION_DENIED)
-        {
-            return false;
-        }
-        else return true;
     }
 
-    public boolean isLocationPermissionsGranted(MainActivity mainActivity) {
+    public void requestLocationPermissions(MainActivity mainActivity) {
         String[] locationPermissions = new String[] {
             android.Manifest.permission.ACCESS_COARSE_LOCATION,
             android.Manifest.permission.ACCESS_FINE_LOCATION
@@ -71,12 +56,5 @@ public class PermissionRequest {
         {
             ActivityCompat.requestPermissions(mainActivity, locationPermissions, LOCATION_PERMISSIONS);
         }
-
-        if (ContextCompat.checkSelfPermission(context, android.Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_DENIED
-            && ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_DENIED)
-        {
-            return false;
-        }
-        else return true;
     }
 }

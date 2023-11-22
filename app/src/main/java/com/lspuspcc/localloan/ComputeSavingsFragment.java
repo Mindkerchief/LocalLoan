@@ -38,8 +38,8 @@ public class ComputeSavingsFragment extends Fragment {
 
     public EditText editTextPrincipal;
     public EditText editTextAnnualInterestRate;
-    public String textPrincipal;
-    public String textAnnualInterestRate;
+    public static String textPrincipal;
+    public static String textAnnualInterestRate;
 
     public ComputeSavingsFragment() {
         // Required empty public constructor
@@ -94,14 +94,14 @@ public class ComputeSavingsFragment extends Fragment {
         EditText finalEditTextMonthlyContribution = editTextMonthlyContribution;
 
         if (textPrincipal != null) {
-            finalEditTextPrincipal.setText(textPrincipal);
+            editTextPrincipal.setText(textPrincipal);
             textPrincipal = null;
         }
-
         if (textAnnualInterestRate != null) {
             editTextAnnualInterestRate.setText(textAnnualInterestRate);
             textAnnualInterestRate = null;
         }
+
         buttonComputeSavings.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

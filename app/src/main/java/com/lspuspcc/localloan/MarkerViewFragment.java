@@ -11,10 +11,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
-import android.widget.Toast;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -106,12 +104,14 @@ public class MarkerViewFragment extends Fragment {
         FragmentManager fragmentManager = getParentFragmentManager();
         FragmentTransaction transaction = fragmentManager.beginTransaction();
         transaction.hide(this);
+        transaction.setTransition(transaction.TRANSIT_FRAGMENT_CLOSE);
         transaction.commit();
     }
 
     private void savingsRedirectBtnOnClick() {
-        mainActivity.replaceFragment(mainActivity.computeFragment);
-        mainActivity.computeFragment.clicked = "LOANS";
+        ComputeFragment computeFragment = new ComputeFragment();
+        computeFragment.clicked = "LOANS";
+        mainActivity.replaceFragment(computeFragment);
 
         computeSavingsFragment.textPrincipal = savingsMinimumDeposit;
         computeSavingsFragment.textAnnualInterestRate = savingsInterestRate;
@@ -119,8 +119,9 @@ public class MarkerViewFragment extends Fragment {
     }
 
     private void loanRedirectBtnOnClick() {
-        mainActivity.replaceFragment(mainActivity.computeFragment);
-        mainActivity.computeFragment.clicked = "SAVINGS";
+        ComputeFragment computeFragment = new ComputeFragment();
+        computeFragment.clicked = "SAVINGS";
+        mainActivity.replaceFragment(computeFragment);
 
         computeLoanFragment.textLoanAmount = loanMinimumAmount;
         computeLoanFragment.textInterestRate = loanAddOnRate;

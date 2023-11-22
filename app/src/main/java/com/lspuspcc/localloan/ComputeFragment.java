@@ -9,11 +9,8 @@ import androidx.fragment.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.EditText;
 
 import com.google.android.material.tabs.TabLayout;
-import com.google.android.material.textfield.TextInputEditText;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -76,12 +73,13 @@ public class ComputeFragment extends Fragment {
 
         View view = inflater.inflate(R.layout.fragment_compute, container, false);
         TabLayout tabLayout = view.findViewById(R.id.tabLayout2);
+        TabLayout.Tab savingsTab = tabLayout.getTabAt(1);
         Context context = getContext();
         MainActivity mainActivity = (MainActivity) context;
         fragmentTransaction = getChildFragmentManager().beginTransaction();
 
-        computeSavingsFragment = mainActivity.computeSavingsFragment;
-        computeLoanFragment = mainActivity.computeLoanFragment;
+        computeSavingsFragment = new ComputeSavingsFragment();
+        computeLoanFragment = new ComputeLoanFragment();
 
         if (savedInstanceState == null) {
             if (clicked == "SAVINGS") {
@@ -89,6 +87,7 @@ public class ComputeFragment extends Fragment {
             }
             else if (clicked == "LOANS") {
                 openSavingsTab();
+                savingsTab.select();
             }
         }
 
