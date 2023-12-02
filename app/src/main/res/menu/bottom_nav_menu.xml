@@ -12,6 +12,7 @@
         android:title="Compute" />
     <item
         android:id="@+id/tracker"
+        android:enabled="false"
         android:icon="@drawable/baseline_table_chart_24"
         android:title="Tracker" />
 </menu>

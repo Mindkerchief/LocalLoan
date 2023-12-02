@@ -36,6 +36,7 @@ public class MapOperation {
     public void setMapCompass() {
         CompassOverlay compassOverlay = new CompassOverlay(context, new InternalCompassOrientationProvider(context), mapView);
         compassOverlay.enableCompass();
+        compassOverlay.setOrientationProvider(compassOverlay.getOrientationProvider());
         mapView.getOverlays().add(compassOverlay);
     }
 
@@ -73,8 +74,8 @@ public class MapOperation {
                         markerView.establishmentBusinessTimeText.setText("Opens " + markerInfoWrapper.businessDay + " " + markerInfoWrapper.businessHour);
                         markerView.savingDetailsText.setText("Minimum initial deposit of " + markerInfoWrapper.minimumInitialDeposit);
                         markerView.loanDetailsText.setText("Minimum loan amount of " + markerInfoWrapper.minimumLoanAmount);
-                        markerView.savingsRedirectBtn.setText("Save for " + markerInfoWrapper.savingsInterestRate);
-                        markerView.loanRedirectBtn.setText("Loan for " + markerInfoWrapper.monthlyAddonInterestRate);
+                        markerView.savingsRedirectBtn.setText("Save for " + markerInfoWrapper.savingsInterestRate + "%");
+                        markerView.loanRedirectBtn.setText("Loan for " + markerInfoWrapper.monthlyAddonInterestRate + "%");
 
                         markerView.savingsMinimumDeposit = Integer.toString(markerInfoWrapper.minimumInitialDeposit);
                         markerView.savingsInterestRate = Float.toString(markerInfoWrapper.savingsInterestRate);

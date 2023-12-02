@@ -47,12 +47,11 @@ public class MapFragment extends Fragment {
     private ComputeLoanFragment computeLoanFragment;
     private MapView mapView;
     private MapOperation mapOperation;
-    private MyLocationNewOverlay locationOverlay;
     private LocationTracking liveLocation;
     private LocationManager locationManager;
     private GeoPoint currentLocation;
     private DatabaseHelper databaseHelper;
-    private double currentZoom = 7.5;
+    private double currentZoom = 18.0;
 
     public MapFragment() {
         // Required empty public constructor
@@ -109,8 +108,12 @@ public class MapFragment extends Fragment {
         try { databaseHelper.copyDatabaseFromAssets(); }
         catch (IOException e) { }
 
-        currentLocation = databaseHelper.getLastLocation();
-        locateGpsBtnOnClick(context);
+        if (currentLocation == null)
+            currentLocation = databaseHelper.getLastLocation();
+
+        IMapController mapController = mapView.getController();
+        mapController.setCenter(currentLocation);
+        mapController.setZoom(18.0);
         mapOperation.setCustomMapOverlays(databaseHelper.getMapMarkers());
 
         FloatingActionButton locateGpsBtn = rootView.findViewById(R.id.locateGpsBtn);
@@ -128,13 +131,17 @@ public class MapFragment extends Fragment {
     public void onResume() {
         super.onResume();
         mapView.onResume();
-        locateGpsBtnOnClick(getActivity());
+        IMapController mapController = mapView.getController();
+        mapController.setCenter(currentLocation);
+        mapController.setZoom(currentZoom);
     }
 
     @Override
     public void onPause() {
         super.onPause();
         mapView.onPause();
+        currentLocation = (GeoPoint) mapView.getMapCenter();
+        currentZoom = mapView.getZoomLevelDouble();
     }
 
     public void locateGpsBtnOnClick(Context context) {
