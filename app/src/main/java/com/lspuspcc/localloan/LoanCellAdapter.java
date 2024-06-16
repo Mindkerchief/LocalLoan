@@ -1,6 +1,5 @@
 package com.lspuspcc.localloan;
 
-import android.accessibilityservice.FingerprintGestureController;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
