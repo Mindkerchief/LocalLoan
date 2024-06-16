@@ -1,5 +1,5 @@
 # ![localloan-logo](https://github.com/Mindkerchief/LocalLoan/assets/130748576/d42cb208-c04a-4970-98e4-26401d1d741f) LocalLoan
-An Android application that can display, navigate and search for the nearest microfinance establishment in your area. This app will also provide basic tools related to microfinance like expected savings and loan calculation based on given rate.
+An Android application that can display, navigate and search for the nearest microfinance establishment in your area. This app will also provide basic tools related to microfinance like expected savings and loan calculation based on given values.
 
 ## Table of Contents
 - [Installation](#installation)
