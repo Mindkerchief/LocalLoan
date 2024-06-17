@@ -3,15 +3,15 @@ plugins {
 }
 
 android {
-    namespace = "com.lspuspcc.localloan"
+    namespace = "com.mindkerchief.localloan"
     compileSdk = 34
 
     defaultConfig {
-        applicationId = "com.lspuspcc.localloan"
+        applicationId = "com.mindkerchief.localloan"
         minSdk = 23
         targetSdk = 34
         versionCode = 1
-        versionName = "1.0.0"
+        versionName = "0.1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
