@@ -14,6 +14,9 @@ An Android application that can display, navigate and search for the nearest mic
 3. Open the app and grant necessary permissions
 
 ## Features
+![bottom-navigation-menu](https://github.com/Mindkerchief/LocalLoan/assets/130748576/2fd4763e-9361-4328-b5be-28e32fd7f85b)
+- **Bottom Navigation Menu** - The main navigation to switch between functionality.
+
 ![a](https://github.com/Mindkerchief/LocalLoan/assets/130748576/2096f369-3013-45c8-9ee8-43a7fe09a62b)
 - **Microfinance Map** - A map that can display the nearest microfinance establishment with necessary tools.
 
@@ -23,11 +26,12 @@ An Android application that can display, navigate and search for the nearest mic
 ![c](https://github.com/Mindkerchief/LocalLoan/assets/130748576/b2384864-ce06-4940-bace-d626ae8b7266)
 - **Compute Tools** - Compute for expected savings and loan amount based on given values.
 
+![tracker](https://github.com/Mindkerchief/LocalLoan/assets/130748576/72390cb2-47ed-4621-b234-ee4dfbf98a1f)
 - **Tracker (disabled)** - Save your existing savings and loans details for convinient overview and tracking.
 
 ## License
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
 ## Acknowledgments
-- **[Android Studio](https://developer.android.com/studio)**: The official IDE for Android development.
-- **[osmdroid](https://github.com/osmdroid/osmdroid)**: An open-source alternative to Google Maps for Android.
+- **[Android Studio](https://developer.android.com/studio)**: The official IDE for Android development by Google.
+- **[osmdroid](https://github.com/osmdroid/osmdroid)**: An open-source alternative to Google Maps for Android by OpenStreetMap.
