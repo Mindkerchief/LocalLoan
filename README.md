@@ -1,6 +1,6 @@
 # ![localloan-logo](https://github.com/Mindkerchief/LocalLoan/assets/130748576/d42cb208-c04a-4970-98e4-26401d1d741f) LocalLoan <a><img src="https://img.shields.io/badge/Microfinance Asistant Application-674FA3"/></a>
 
-An Android application that can display, navigate and search for the nearest microfinance establishment in your area. This app will also provide basic tools related to microfinance like expected savings and loan calculation based on given values.
+An android application that provides microfinance assistance. Discover and navigate the nearest microfinance establishment. Financial tools like loan/savings calculator and tracker can help users create better decisions and awareness.
 
 ## Table of Contents
 - [Features](#features)
@@ -11,20 +11,24 @@ An Android application that can display, navigate and search for the nearest mic
 ## Features
 
 <div>
-  <img src="https://github.com/Mindkerchief/LocalLoan/assets/130748576/2096f369-3013-45c8-9ee8-43a7fe09a62b" alt="microfinance-map">
+  <img src="https://github.com/Mindkerchief/LocalLoan/assets/130748576/2096f369-3013-45c8-9ee8-43a7fe09a62b" alt="map-tab">
   &nbsp;
-  <img src="https://github.com/Mindkerchief/LocalLoan/assets/130748576/f3937930-38f8-4b92-8276-dfeb47688426" alt="compute-tab">
-  &nbsp;
-  <img src="https://github.com/Mindkerchief/LocalLoan/assets/130748576/656bfac1-4fba-4c7f-91ed-169ff37129b3" alt="tracker-tab">
-  &nbsp;
-  <img src="https://github.com/Mindkerchief/LocalLoan/assets/130748576/0fb27432-5248-4c46-8758-88c32a54f4e0" alt="quick-tools">
+  <img src="https://github.com/Mindkerchief/LocalLoan/assets/130748576/1489bf3a-a7d8-4196-8922-414eb02f6d35" alt="quick-tools">
 </div>
 &nbsp;
 
-- **Microfinance Map** - A map that can display the nearest microfinance establishment with necessary tools.
-- **Loan/Savings Calculator** - Compute for expected savings and loan amount based on given values.
-- **~~Tracker~~ (disabled)** - Save your existing savings and loans details for convinient overview and tracking.
-- **Microfinance Quick Tools** - By selecting establishment, user can have access to quick tools that will be redirected to compute tools.
+- **Microfinance Map** - Displays a map that can be navigated and marks the nearest microfinance establishment.
+- **Microfinance Quick Tools** - Access a set of tools for convenience purposes.
+
+<div>
+  <img src="https://github.com/Mindkerchief/LocalLoan/assets/130748576/f3937930-38f8-4b92-8276-dfeb47688426" alt="compute-tab">
+  &nbsp;
+  <img src="https://github.com/Mindkerchief/LocalLoan/assets/130748576/656bfac1-4fba-4c7f-91ed-169ff37129b3" alt="tracker-tab">
+</div>
+&nbsp;
+
+- **Financial Calculator** - Compute for expected savings and loan amount based on given values.
+- **~~Tracker~~ (disabled)** - Save existing loan and savings information to conveniently track accounts.
 
 ## Installation
 1. Download the latest [release](https://github.com/Mindkerchief/LocalLoan/releases).
