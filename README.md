@@ -1,4 +1,4 @@
-# ![localloan-thumbnail][localloan-thumbnail] LocalLoan ![localloan-badge][localloan-badge]
+# ![localloan thumbnail][localloan-thumbnail] LocalLoan ![localloan badge][localloan-badge]
 An android application that provides microfinance assistance. Discover and navigate the nearest microfinance establishment. Financial tools like loan/savings calculator and tracker can help users create better decisions and awareness.
 
 ## Table of Contents
@@ -8,9 +8,9 @@ An android application that provides microfinance assistance. Discover and navig
 - [Acknowledgments](#acknowledgments)
 
 ## Features
-![map-tab][map-tab] &nbsp;
-![quick-tools][quick-tools] &nbsp;
-![compute-tab][compute-tab]
+![map tab][map-tab] &nbsp;
+![quick tools][quick-tools] &nbsp;
+![compute tab][compute-tab]
 - **Microfinance Map** - Displays a map that can be navigated and marks the nearest microfinance establishment.
 - **Microfinance Quick Tools** - Access a set of tools for convenience purposes.
 - **Financial Calculator** - Compute for expected savings and loan amount based on given values.
